@@ -1,2 +1,53 @@
-import nmap
 import os
+import argparse
+import asyncio
+import subprocess as sub
+
+
+# The program should be run as such: questrecon <TARGET> <OUTPUT_DIR>
+parser = argparse.ArgumentParser()
+parser.add_argument('-t','--target', help = 'Specify the target IP address or hostname') # sys.argv[1]
+parser.add_argument('-H','--hosts', help = 'Specify the path to a file containing host(s) seperated by one or more spaces, tabs, or newlines') # sys.argv[2]
+parser.add_argument('-o','--outfile', help = 'Specify the directory path to output the results. E.g., "~/Pentests/Client1/Target1"') # sys.argv[3]
+args = parser.parse_args()
+
+target = args.target
+hosts = args.hosts
+outfile = args.outfile
+
+
+# First, we want to initiate an nmap scan and output the results of the scan to a file. 
+# General Scan Syntax = sudo nmap -sS -sU -sV {target} -p-
+
+def initial_scan():
+    open_tcp = []
+    open_udp = []
+    if args.target: # conditional based on argument given 
+        sub.run([f"nmap {target} -p- -oX {outfile}"], shell=True) # parse XML output, but only save a standard -oN for the user
+    if args.hosts: # conditional based on argument given
+        sub.run([f"nmap -iL {hosts} -p- -oX {outfile}"], shell=True)
+
+  
+
+
+
+
+
+# For each (common) port that is open, we will want to move onto the next investigative step. E.g., if p21 FTP is open, test for anonymous login
+# Same for p139/445 SMB
+
+#def open_ports(found_ports): 
+    '''take a quick scan approach first, scanning all ports, then run a more comprehensive scan on those found ports to save time using:
+sudo nmap -sS -sU -sV {target} {found_ports}'''
+
+
+
+def main():
+    initial_scan()
+
+
+if __name__ == "__main__":
+    main()
+
+
+
