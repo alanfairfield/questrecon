@@ -16,9 +16,10 @@ def print_ascii_art():
 |   \__\_\  \_,_| \___|  /__/  \__|  |_|_\  \___|  \__|  \___/ |_||_|    |
 |                                                                        |
 +~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-+                                                                        
-''' + '\033[92m')
+''' + '\033[92m') 
 
     print(ascii_art)
+    print("\nThe quieter you become, the more you can hear.\n") # change color and add effects
 
 # Add arguments
 parser = argparse.ArgumentParser()
