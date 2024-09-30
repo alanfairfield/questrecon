@@ -45,9 +45,9 @@ def initial_scan():
         sub.run([f"nmap -iL {hosts} -p- -sU -oX {outfile}_udp"], shell=True)
         return None
 
-def parse_output(): # Idea: parse results into a tuple- target = (ip_addr, [tcp_port1, tcp_port2, tcp_port3], [udp_port1, udp_port2, udp_port3])
-    open_tcp = []
-    open_udp = []
+def parse_output(): # Idea: parse results into a dictionary, with the key being list-values of open tcp and udp ports  "openPorts = {'ip_addr': '127.0.0.1', 'tcp': '['21','22','80','443','8080']', 'udp': '['53','125']'}"
+    open_tcp = {}
+    open_udp = {}
 
 
 
@@ -70,6 +70,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-
-#TEST
