@@ -25,25 +25,32 @@ def print_ascii_art():
 parser = argparse.ArgumentParser()
 parser.add_argument('-t','--target', help = 'Specify the target IP address, CIDR range, or hostname') 
 parser.add_argument('-H','--hosts', help = 'Specify the path to a file containing host(s) seperated by one or more spaces, tabs, or newlines') 
-parser.add_argument('-o','--outfile', help = 'Specify the directory path to output the results. E.g., "~/Pentests/Client1/Target1"') 
+parser.add_argument('-o','--out', help = 'Specify the directory path to output the results. E.g., "~/Pentests/Client1/results"') 
 args = parser.parse_args()
 
 target = args.target
 hosts = args.hosts
-outfile = args.outfile
+output_dir = args.out
 
 
 # First, we want to initiate an nmap scan and output the results of the scan to a file. 
 # General Scan Syntax = sudo nmap -sS -sU -sV {target} -p-
 
+def ouput_dir():
+    if not os.path.isdir(output_dir):
+        try:
+            os.makedirs(f'{output_dir}/results')
+        except:
+            print("Something went wrong with the creation of the output directory! Try running with sudo.")
+
 def initial_scan():
-    if args.target: # conditional based on argument given 
-        sub.run([f"nmap {target} -p- -oX {outfile}_tcp"], shell=True) # parse XML output, but only save a standard -oN for the user
-        sub.run([f"nmap {target} -p- -sU -oX {outfile}_udp"], shell=True)
+    if args.target: # conditional based on argument given
+        sub.run([f"nmap {target} -p- -oX {output_dir}/results/quick_tcp"], shell=True) # parse XML output, but only save a standard -oN for the user
+        sub.run([f"nmap {target} -p- -sU -oX {output_dir}/results/quick_udp"], shell=True)
     if args.hosts: # conditional based on argument given
-        sub.run([f"nmap -iL {hosts} -p- -oX {outfile}_tcp"], shell=True)
-        sub.run([f"nmap -iL {hosts} -p- -sU -oX {outfile}_udp"], shell=True)
-        return None
+        sub.run([f"nmap -iL {hosts} -p- -oX {output_dir}/results/quick_tcp"], shell=True)
+        sub.run([f"nmap -iL {hosts} -p- -sU -oX {output_dir}/results/quick_udp"], shell=True)
+
 
 def parse_output(): # Idea: parse results into a dictionary, with the key being list-values of open tcp and udp ports  "openPorts = {'ip_addr': '127.0.0.1', 'tcp': '['21','22','80','443','8080']', 'udp': '['53','125']'}"
     open_tcp = {}
@@ -64,6 +71,7 @@ sudo nmap -sS -sU -sV {target} {found_ports}'''
 
 def main():
     print_ascii_art()
+    ouput_dir()
     initial_scan()
 
 
