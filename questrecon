@@ -44,11 +44,11 @@ def ouput_dir():
             print("Something went wrong with the creation of the output directory! Try running with sudo.")
 
 
-def initial_scan():
-    if args.target: # conditional based on argument given
+def initial_scan(): #IDEA- break UDP scanning out into its own function which starts first, and executes asynchronously, so that UDP output does not massively slow down the primary tasks.
+    if args.target: 
         sub.run([f"nmap {target} -p- -oN {output_dir}/results/quick_tcp_nmap.txt -oX {output_dir}/results/quick_tcp_nmap.xml"], shell=True) # parse XML output, but only save a standard -oN for the user
         sub.run([f"nmap {target} -p- -sU -oN {output_dir}/results/quick_udp_nmap.txt  -oX {output_dir}/results/quick_udp_nmap.xml"], shell=True)
-    if args.hosts: # conditional based on argument given
+    if args.hosts: 
         sub.run([f"nmap -iL {hosts} -p- -oN {output_dir}/results/quick_tcp_nmap.txt -oX {output_dir}/results/quick_tcp_nmap.xml"], shell=True)
         sub.run([f"nmap -iL {hosts} -p- -sU -oN {output_dir}/results/quick_udp_nmap.txt -oX {output_dir}/results/quick_udp_nmap.txt"], shell=True)
 
