@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.94SVN scan initiated Wed Oct  2 19:27:06 2024 as: /usr/lib/nmap/nmap -&#45;privileged -iL hosts.txt -p- -oN test/results/quick_tcp_nmap.txt -oX test/results/quick_tcp_nmap.xml -->
+<nmaprun scanner="nmap" args="/usr/lib/nmap/nmap -&#45;privileged -iL hosts.txt -p- -oN test/results/quick_tcp_nmap.txt -oX test/results/quick_tcp_nmap.xml" start="1727911626" startstr="Wed Oct  2 19:27:06 2024" version="7.94SVN" xmloutputversion="1.05">
+<scaninfo type="syn" protocol="tcp" numservices="65535" services="1-65535"/>
+<verbose level="0"/>
+<debugging level="0"/>
+<hosthint><status state="up" reason="unknown-response" reason_ttl="0"/>
+<address addr="45.33.32.156" addrtype="ipv4"/>
+<hostnames>
+<hostname name="scanme.org" type="user"/>
+</hostnames>
+</hosthint>
+<hosthint><status state="up" reason="unknown-response" reason_ttl="0"/>
+<address addr="10.10.0.1" addrtype="ipv4"/>
+<hostnames>
+</hostnames>
+</hosthint>
+<host starttime="1727911627" endtime="1727911627"><status state="up" reason="localhost-response" reason_ttl="0"/>
+<address addr="127.0.0.1" addrtype="ipv4"/>
+<hostnames>
+<hostname name="localhost" type="PTR"/>
+</hostnames>
+<ports><extraports state="closed" count="65532">
+<extrareasons reason="reset" count="65532" proto="tcp" ports="1-5431,5434-40406,40408-65535"/>
+</extraports>
+<port protocol="tcp" portid="5432"><state state="open" reason="syn-ack" reason_ttl="64"/><service name="postgresql" method="table" conf="3"/></port>
+<port protocol="tcp" portid="5433"><state state="open" reason="syn-ack" reason_ttl="64"/><service name="pyrrho" method="table" conf="3"/></port>
+<port protocol="tcp" portid="40407"><state state="open" reason="syn-ack" reason_ttl="64"/></port>
+</ports>
+<times srtt="6" rttvar="0" to="100000"/>
+</host>
+<taskprogress task="SYN Stealth Scan" time="1727911674" percent="2.88" remaining="1587" etc="1727913261"/>
+<taskprogress task="SYN Stealth Scan" time="1727911684" percent="3.27" remaining="1685" etc="1727913369"/>
