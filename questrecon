@@ -1,9 +1,9 @@
 import os
 import argparse
-import asyncio
-import subprocess as sub
-import xml.etree.ElementTree as ET 
+import nmap
+from pathlib import Path
 
+# Function to print ASCII art (you can customize as needed)
 def print_ascii_art():
     ascii_art = ('\033[92m' + r'''
 +~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-+                                                                   
@@ -16,66 +16,103 @@ def print_ascii_art():
 |   \__\_\  \_,_| \___|  /__/  \__|  |_|_\  \___|  \__|  \___/ |_||_|    |
 |                                                                        |
 +~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-+                                                                        
-''' + '\033[92m') 
+''' + '\033[92m')
 
     print(ascii_art)
-    print("\nThe quieter you become, the more you can hear.\n") # change color and add effects
+    print("\nThe quieter you become, the more you can hear.\n")
 
-# Add arguments
+# Arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('-t','--target', help = 'Specify the target IP address, CIDR range, or hostname') 
-parser.add_argument('-H','--hosts', help = 'Specify the path to a file containing host(s) seperated by one or more spaces, tabs, or newlines') 
-parser.add_argument('-o','--out', help = 'Specify the directory path to output the results. E.g., "~/Pentests/Client1"') 
+parser.add_argument('-t', '--target', help='Specify the target IP address, CIDR range, or hostname')
+parser.add_argument('-H', '--hosts', help='Specify the path to a file containing host(s) separated by one or more spaces, tabs, or newlines')
+parser.add_argument('-o', '--out', help='Specify the directory name path to output the results. E.g., ~/Pentests/Client1')
 args = parser.parse_args()
 
+# Variables from arguments
 target = args.target
 hosts = args.hosts
 output_dir = args.out
 
-
-# First, we want to initiate an nmap scan and output the results of the scan to a file. 
-# General Scan Syntax = sudo nmap -sS -sU -sV {target} -p-
-
-def ouput_dir():
+# Create output directory if it doesn't alreadyexist
+def create_output_dir():
     if not os.path.isdir(output_dir):
         try:
             os.makedirs(f'{output_dir}/results')
-        except:
-            print("Something went wrong with the creation of the output directory! Try running with sudo.")
+            print(f"[+] Output directory created: {output_dir}/results")
+        except Exception as e:
+            print(f"[-] Something went wrong with the creation of the output directory! Error: {e}")
+
+# Create directory structure for each host and their ports
+def create_directory_structure(host, ports):
+    # Create directory for the host
+    host_dir = Path(output_dir) / "results" / host
+    host_dir.mkdir(parents=True, exist_ok=True)
+    print(f"[+] Created directory for host: {host_dir}")
+
+    # Create directories for each port under the host directory
+    for port in ports:
+        port_dir = host_dir / str(port)
+        port_dir.mkdir(parents=True, exist_ok=True)
+        print(f"[+] Created directory for port {port} under host {host}")
+
+# Function to scan the targets using python-nmap
+def scan_with_nmap(target, ports="-"):
+    # Create an nmap scanner object
+    nm = nmap.PortScanner()
+    print(f"[+] Scanning target: {target}")
+
+    # Run a TCP scan and a UDP scan
+    try:
+        # TCP Scan
+        print(f"[+] Running TCP scan on {target}...")
+        nm.scan(target, arguments=f"-p{ports}")  # Basic TCP scan
+        tcp_ports = nm[target]['tcp'].keys() if 'tcp' in nm[target] else []
+        print(f"[+] TCP Ports open on {target}: {list(tcp_ports)}")
+
+        # UDP Scan
+        print(f"[+] Running UDP scan on {target}...")
+        nm.scan(target, arguments=f"-p {ports} -sU -sV")  # Basic UDP scan
+        udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
+        print(f"[+] UDP Ports open on {target}: {list(udp_ports)}")
+
+        # Combine TCP and UDP ports
+        open_ports = set(tcp_ports).union(set(udp_ports))
+
+        # Create directory structure for the host and associated ports
+        create_directory_structure(target, open_ports)
+
+    except Exception as e:
+        print(f"[-] An error occurred during scanning: {e}")
+        '''
+        #Debug logic. Pass open_ports to another function
+    for port in open_ports:
+        print(port)
+        '''
+    return open_ports
+    
 
 
-def initial_scan(): #IDEA- break UDP scanning out into its own function which starts first, and executes asynchronously, so that UDP output does not massively slow down the primary tasks.
-    if args.target: 
-        sub.run([f"nmap {target} -p- -oN {output_dir}/results/quick_tcp_nmap.txt -oX {output_dir}/results/quick_tcp_nmap.xml"], shell=True) # parse XML output, but only save a standard -oN for the user
-        sub.run([f"nmap {target} -p- -sU -oN {output_dir}/results/quick_udp_nmap.txt  -oX {output_dir}/results/quick_udp_nmap.xml"], shell=True)
-    if args.hosts: 
-        sub.run([f"nmap -iL {hosts} -p- -oN {output_dir}/results/quick_tcp_nmap.txt -oX {output_dir}/results/quick_tcp_nmap.xml"], shell=True)
-        sub.run([f"nmap -iL {hosts} -p- -sU -oN {output_dir}/results/quick_udp_nmap.txt -oX {output_dir}/results/quick_udp_nmap.txt"], shell=True)
+# Handle multiple targets from a file
 
+def scan_multiple_hosts(hosts_file):
+    with open(hosts_file, 'r') as file:
+        hosts = [line.strip() for line in file.readlines() if line.strip()]
+    for host in hosts:
+        scan_with_nmap(host)
 
-def parse_output(): # Idea: parse results into a dictionary, with the key being list-values of open tcp and udp ports  "openPorts = {'ip_addr': '127.0.0.1', 'tcp': '['21','22','80','443','8080']', 'udp': '['53','125']'}"
-    open_tcp = {}
-    open_udp = {}
-
-
-
-
-
-# For each (common) port that is open, we will want to move onto the next investigative step. E.g., if p21 FTP is open, test for anonymous login
-# Same for p139/445 SMB
-
-#def open_ports(found_ports): 
-    '''take a quick scan approach first, scanning all ports, then run a more comprehensive scan on those found ports to save time using:
-sudo nmap -sS -sU -sV {target} {found_ports}'''
-
-
+# Main 
 
 def main():
     print_ascii_art()
-    ouput_dir()
-    initial_scan()
+    create_output_dir()
 
+    if target:
+        scan_with_nmap(target)
+    elif hosts:
+        scan_multiple_hosts(hosts)
+    else:
+        print("[-] Please specify a target using '-t' or provide a hosts file using '-H'")
 
+# Run the script
 if __name__ == "__main__":
     main()
-

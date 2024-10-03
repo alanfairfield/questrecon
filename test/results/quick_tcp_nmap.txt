@@ -1,9 +1,0 @@
-# Nmap 7.94SVN scan initiated Wed Oct  2 19:27:06 2024 as: /usr/lib/nmap/nmap --privileged -iL hosts.txt -p- -oN test/results/quick_tcp_nmap.txt -oX test/results/quick_tcp_nmap.xml
-Nmap scan report for localhost (127.0.0.1)
-Host is up (0.0000060s latency).
-Not shown: 65532 closed tcp ports (reset)
-PORT      STATE SERVICE
-5432/tcp  open  postgresql
-5433/tcp  open  pyrrho
-40407/tcp open  unknown
-

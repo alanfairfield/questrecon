@@ -1,4 +1,0 @@
-# Nmap 7.94SVN scan initiated Wed Oct  2 19:26:43 2024 as: /usr/lib/nmap/nmap --privileged -p- -sU -oN test/results/quick_udp_nmap.txt -oX test/results/quick_udp_nmap.xml hosts.txt
-Failed to resolve "hosts.txt".
-WARNING: No targets were specified, so 0 hosts scanned.
-# Nmap done at Wed Oct  2 19:26:43 2024 -- 0 IP addresses (0 hosts up) scanned in 0.09 seconds
