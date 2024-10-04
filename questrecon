@@ -3,7 +3,7 @@ import argparse
 import nmap
 from pathlib import Path
 
-# Function to print ASCII art (you can customize as needed)
+# Function to print ASCII art 
 def print_ascii_art():
     ascii_art = ('\033[92m' + r'''
 +~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-+                                                                   
@@ -113,6 +113,6 @@ def main():
     else:
         print("[-] Please specify a target using '-t' or provide a hosts file using '-H'")
 
-# Run the script
+# Run the program
 if __name__ == "__main__":
     main()
