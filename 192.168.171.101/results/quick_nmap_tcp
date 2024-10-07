@@ -1,1 +1,11 @@
-# Nmap 7.94SVN scan initiated Mon Oct  7 17:45:54 2024 as: /usr/lib/nmap/nmap --privileged -oX - -p- -oN /home/quest/Github_Repo/questrecon/192.168.171.101/results/quick_nmap_tcp 192.168.171.101
+# Nmap 7.94SVN scan initiated Mon Oct  7 18:54:32 2024 as: /usr/lib/nmap/nmap --privileged -oX - -oN /home/quest/Github_Repo/questrecon/192.168.171.101/results/quick_nmap_tcp 192.168.171.101
+Nmap scan report for 192.168.171.101
+Host is up (0.13s latency).
+Not shown: 996 closed tcp ports (reset)
+PORT     STATE SERVICE
+22/tcp   open  ssh
+80/tcp   open  http
+8080/tcp open  http-proxy
+8081/tcp open  blackice-icecap
+
+# Nmap done at Mon Oct  7 18:54:37 2024 -- 1 IP address (1 host up) scanned in 4.88 seconds

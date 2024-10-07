@@ -1,7 +1,1 @@
-# Nmap 7.94SVN scan initiated Mon Oct  7 17:45:54 2024 as: /usr/lib/nmap/nmap --privileged -oX - -sU -oN /home/quest/Github_Repo/questrecon/192.168.171.101/results/quick_nmap_udp 192.168.171.101
-Nmap scan report for 192.168.171.101
-Host is up (0.17s latency).
-All 1000 scanned ports on 192.168.171.101 are in ignored states.
-Not shown: 1000 closed udp ports (port-unreach)
-
-# Nmap done at Mon Oct  7 18:03:13 2024 -- 1 IP address (1 host up) scanned in 1038.43 seconds
+# Nmap 7.94SVN scan initiated Mon Oct  7 18:54:37 2024 as: /usr/lib/nmap/nmap --privileged -oX - -sU -oN /home/quest/Github_Repo/questrecon/192.168.171.101/results/quick_nmap_udp 192.168.171.101

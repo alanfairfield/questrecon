@@ -1,0 +1,1 @@
+# Nmap 7.94SVN scan initiated Mon Oct  7 19:34:30 2024 as: /usr/lib/nmap/nmap --privileged -oX - -oN /home/quest/Github_Repo/questrecon/PG_Machine_1/results/quick_nmap_tcp 192.168.171.101

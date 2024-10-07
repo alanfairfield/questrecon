@@ -65,7 +65,7 @@ def udp_nmap(target):
 
     try:
 
-        print(f"[+] Running UDP scan on {target}...")
+        print(f"[+] Running Quick UDP scan on {target}...")
         nm.scan(target, arguments=f"-sU -oN {output_dir}/results/quick_nmap_udp")  # Basic UDP scan
         udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
         print(f"[+] UDP Ports open on {target}: {list(udp_ports)}")
@@ -81,15 +81,15 @@ def udp_nmap(target):
     return open_udp
 
 # Function to scan the targets using python-nmap
-def tcp_nmap(target, ports="-"):
+def tcp_nmap(target):
     # Create an nmap scanner object
     nm = nmap.PortScanner()
 
     # Run a TCP scan and a UDP scan
     try:
         # TCP Scan
-        print(f"[+] Running TCP scan on {target}...")
-        nm.scan(target, arguments=f"-p{ports} -oN {output_dir}/results/quick_nmap_tcp")  # Basic TCP scan
+        print(f"[+] Running Quick TCP scan on {target}...")
+        nm.scan(target, arguments=f"-oN {output_dir}/results/quick_nmap_tcp")  # Basic TCP scan
         tcp_ports = nm[target]['tcp'].keys() if 'tcp' in nm[target] else []
         print(f"[+] TCP Ports open on {target}: {list(tcp_ports)}")
 
@@ -116,8 +116,11 @@ def scan_multiple_hosts(hosts_file):
     with open(hosts_file, 'r') as file:
         hosts = [line.strip() for line in file.readlines() if line.strip()]
     for host in hosts:
-        tcp_nmap(host)
-        udp_nmap(host)
+        with ProcessPoolExecutor() as executor:
+            print(f"Initiating Quick UDP scan on {host}") # Debug print statement
+            executor.submit(udp_nmap, host)
+            print(f"Initiating Quick TCP scan on {host}") # Debug print statement
+            executor.submit(tcp_nmap, host)
 
 # Main 
 
@@ -126,16 +129,9 @@ def main():
     create_output_dir()
 
     if target:
-        with ProcessPoolExecutor(max_workers=5) as executor:
-            udp_future = executor.submit(udp_nmap, target)
-            tcp_future = executor.submit(tcp_nmap, target)
-            for future in as_completed([udp_future, tcp_future]):
-                try:
-                    result = future.result()
-                    print(f"Scan completed. Result: {result}")
-                except Exception as e:
-                    print(f"An error occured during concurrent scanning: {e}")
-        #tcp_nmap(target)
+        with ProcessPoolExecutor() as executor:
+            executor.submit(udp_nmap, target)
+            executor.submit(tcp_nmap, target)
     elif hosts:
         scan_multiple_hosts(hosts)
     else:
