@@ -66,7 +66,7 @@ def udp_nmap(target):
     try:
 
         print(f"[+] Running UDP scan on {target}...")
-        nm.scan(target, arguments=f"-sU -oN {output_dir}/quick_nmap_udp")  # Basic UDP scan
+        nm.scan(target, arguments=f"-sU -oN {output_dir}/results/quick_nmap_udp")  # Basic UDP scan
         udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
         print(f"[+] UDP Ports open on {target}: {list(udp_ports)}")
 
@@ -84,13 +84,12 @@ def udp_nmap(target):
 def tcp_nmap(target, ports="-"):
     # Create an nmap scanner object
     nm = nmap.PortScanner()
-    print(f"[+] Scanning target: {target}")
 
     # Run a TCP scan and a UDP scan
     try:
         # TCP Scan
         print(f"[+] Running TCP scan on {target}...")
-        nm.scan(target, arguments=f"-p{ports} -oN {output_dir}/quick_nmap_tcp")  # Basic TCP scan
+        nm.scan(target, arguments=f"-p{ports} -oN {output_dir}/results/quick_nmap_tcp")  # Basic TCP scan
         tcp_ports = nm[target]['tcp'].keys() if 'tcp' in nm[target] else []
         print(f"[+] TCP Ports open on {target}: {list(tcp_ports)}")
 
