@@ -55,8 +55,30 @@ def create_directory_structure(host, ports):
         port_dir.mkdir(parents=True, exist_ok=True)
         print(f"[+] Created directory for port {port} under host {host}")
 
+# UDP Scan
+
+def udp_nmap(target):
+    nm = nmap.PortScanner()
+
+    try:
+
+        print(f"[+] Running UDP scan on {target}...")
+        nm.scan(target, arguments=f"-sU -sV")  # Basic UDP scan
+        udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
+        print(f"[+] UDP Ports open on {target}: {list(udp_ports)}")
+
+        # Tabulate open UDP ports and store them in a set
+        open_udp = set(udp_ports)
+
+        # Create directory structure for the host and associated ports
+        create_directory_structure(target, open_udp)
+
+    except Exception as e:
+        print(f"[-] An error occured during scanning: {e}")
+    return open_udp
+
 # Function to scan the targets using python-nmap
-def scan_with_nmap(target, ports="-"):
+def tcp_nmap(target, ports="-"):
     # Create an nmap scanner object
     nm = nmap.PortScanner()
     print(f"[+] Scanning target: {target}")
@@ -69,17 +91,11 @@ def scan_with_nmap(target, ports="-"):
         tcp_ports = nm[target]['tcp'].keys() if 'tcp' in nm[target] else []
         print(f"[+] TCP Ports open on {target}: {list(tcp_ports)}")
 
-        # UDP Scan
-        print(f"[+] Running UDP scan on {target}...")
-        nm.scan(target, arguments=f"-p {ports} -sU -sV")  # Basic UDP scan
-        udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
-        print(f"[+] UDP Ports open on {target}: {list(udp_ports)}")
-
-        # Combine TCP and UDP ports
-        open_ports = set(tcp_ports).union(set(udp_ports))
+        # Tabulate open TCP ports an store them in a set
+        open_tcp = set(tcp_ports)
 
         # Create directory structure for the host and associated ports
-        create_directory_structure(target, open_ports)
+        create_directory_structure(target, open_tcp)
 
     except Exception as e:
         print(f"[-] An error occurred during scanning: {e}")
@@ -88,7 +104,7 @@ def scan_with_nmap(target, ports="-"):
     for port in open_ports:
         print(port)
         '''
-    return open_ports
+    return open_tcp
     
 
 
@@ -98,7 +114,8 @@ def scan_multiple_hosts(hosts_file):
     with open(hosts_file, 'r') as file:
         hosts = [line.strip() for line in file.readlines() if line.strip()]
     for host in hosts:
-        scan_with_nmap(host)
+        tcp_nmap(host)
+        udp_nmap(host)
 
 # Main 
 
@@ -107,7 +124,8 @@ def main():
     create_output_dir()
 
     if target:
-        scan_with_nmap(target)
+        tcp_nmap(target)
+        udp_nmap(target)
     elif hosts:
         scan_multiple_hosts(hosts)
     else:
