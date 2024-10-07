@@ -2,6 +2,9 @@ import os
 import argparse
 import nmap
 from pathlib import Path
+from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import as_completed
+
 
 # Function to print ASCII art 
 def print_ascii_art():
@@ -63,7 +66,7 @@ def udp_nmap(target):
     try:
 
         print(f"[+] Running UDP scan on {target}...")
-        nm.scan(target, arguments=f"-sU -sV")  # Basic UDP scan
+        nm.scan(target, arguments=f"-sU -oN {output_dir}/quick_nmap_udp")  # Basic UDP scan
         udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
         print(f"[+] UDP Ports open on {target}: {list(udp_ports)}")
 
@@ -87,7 +90,7 @@ def tcp_nmap(target, ports="-"):
     try:
         # TCP Scan
         print(f"[+] Running TCP scan on {target}...")
-        nm.scan(target, arguments=f"-p{ports}")  # Basic TCP scan
+        nm.scan(target, arguments=f"-p{ports} -oN {output_dir}/quick_nmap_tcp")  # Basic TCP scan
         tcp_ports = nm[target]['tcp'].keys() if 'tcp' in nm[target] else []
         print(f"[+] TCP Ports open on {target}: {list(tcp_ports)}")
 
@@ -124,8 +127,16 @@ def main():
     create_output_dir()
 
     if target:
-        tcp_nmap(target)
-        udp_nmap(target)
+        with ProcessPoolExecutor(max_workers=5) as executor:
+            udp_future = executor.submit(udp_nmap, target)
+            tcp_future = executor.submit(tcp_nmap, target)
+            for future in as_completed([udp_future, tcp_future]):
+                try:
+                    result = future.result()
+                    print(f"Scan completed. Result: {result}")
+                except Exception as e:
+                    print(f"An error occured during concurrent scanning: {e}")
+        #tcp_nmap(target)
     elif hosts:
         scan_multiple_hosts(hosts)
     else:
