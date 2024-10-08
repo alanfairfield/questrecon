@@ -1,1 +1,0 @@
-# Nmap 7.94SVN scan initiated Mon Oct  7 18:54:37 2024 as: /usr/lib/nmap/nmap --privileged -oX - -sU -oN /home/quest/Github_Repo/questrecon/192.168.171.101/results/quick_nmap_udp 192.168.171.101

@@ -4,9 +4,9 @@ import nmap
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import as_completed
-'''This program version uses ProcessPoolExecutor to create distinct processes for multiple concurrent scans. This is good for operations that are more CPU-intensive 
+'''The other program version uses ProcessPoolExecutor to create distinct processes for multiple concurrent scans. This is good for operations that are more CPU-intensive 
 (like nmap script scans, maybe dirbusting, etc.) but may have more unnecessary overhead for enumeration steps that are primarily bound by I/O, like basic nmap port-sweeps.
-The other program version which will be titled 'test.py' will use python3-nmap's async scan function for comparison.'''
+This program version, 'test.py', will use python3-nmap's async scan function for comparison.'''
 
 # Function to print ASCII art 
 def print_ascii_art():
@@ -46,6 +46,7 @@ def create_output_dir():
             print(f"[+] Output directory created: {output_dir}/results")
         except Exception as e:
             print(f"[-] Something went wrong with the creation of the output directory! Error: {e}")
+   
 
 # Create directory structure for each host and their ports
 def create_directory_structure(host, ports):
@@ -63,14 +64,18 @@ def create_directory_structure(host, ports):
 # UDP Scan
 
 def udp_nmap(target):
-    nm = nmap.PortScanner()
+    nma = nmap.PortScannerAsync()
 
     try:
 
         print(f"[+] Running Quick UDP scan on {target}...")
-        nm.scan(target, arguments=f"-sU -oN {output_dir}/results/quick_nmap_udp")  # Basic UDP scan
-        udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
+        nma.scan(target, arguments=f"-sU -oN {output_dir}/results/quick_nmap_udp", callback=create_directory_structure(target,ports))  # Basic UDP scan
+        udp_ports = nma[target]['udp'].keys() if 'udp' in nma[target] else []
         print(f"[+] UDP Ports open on {target}: {list(udp_ports)}")
+
+        while nma.still_scanning():
+            print("...", flush=True)
+            nma.wait(10)
 
         # Tabulate open UDP ports and store them in a set
         open_udp = set(udp_ports)
@@ -91,7 +96,8 @@ def tcp_nmap(target):
     try:
         # TCP Scan
         print(f"[+] Running Quick TCP scan on {target}...")
-        nm.scan(target, arguments=f"-oN {output_dir}/results/quick_nmap_tcp")  # Basic TCP scan
+        nm.scan(target, arguments=f"-oN {output_dir}/results/quick_nmap_tcp", callback=create_directory_structure(target,ports))  # Basic TCP scan
+
         tcp_ports = nm[target]['tcp'].keys() if 'tcp' in nm[target] else []
         print(f"[+] TCP Ports open on {target}: {list(tcp_ports)}")
 
@@ -113,14 +119,14 @@ def tcp_nmap(target):
 
 
 # Handle multiple targets from a file
-
 def scan_multiple_hosts(hosts_file):
+
     with open(hosts_file, 'r') as file:
         hosts = [line.strip() for line in file.readlines() if line.strip()]
+
     for host in hosts:
-        with ProcessPoolExecutor() as executor:
-            executor.submit(udp_nmap, host)
-            executor.submit(tcp_nmap, host)
+        udp_nmap(host)
+        tcp_nmap(host)
 
 # Main 
 
@@ -129,13 +135,20 @@ def main():
     create_output_dir()
 
     if target:
-        with ProcessPoolExecutor() as executor:
-            executor.submit(udp_nmap, target)
-            executor.submit(tcp_nmap, target)
+        udp_nmap(target)
+        tcp_nmap(target)
+
     elif hosts:
         scan_multiple_hosts(hosts)
+
     else:
         print("[-] Please specify a target using '-t' or provide a hosts file using '-H'")
+
+'''logic to allow for no output_dir argument, and if no argument, create the parent results folder in current working dir:
+if not output_dir:
+        output_dir = Path.cwd()
+'''
+        
 
 # Run the program
 if __name__ == "__main__":
