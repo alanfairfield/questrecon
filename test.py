@@ -64,9 +64,7 @@ def create_directory_structure(host, ports):
 
 def udp_nmap(target):
     nm = nmap.PortScanner()
-
     try:
-
         print(f"[+] Running Quick UDP scan on {target}...")
         nm.scan(target, arguments=f"-sU -oN {output_dir}/results/quick_nmap_udp")  # Basic UDP scan
         udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
@@ -82,17 +80,19 @@ def udp_nmap(target):
         print(f"[-] An error occured during scanning: {e}")
     return open_udp
 
-# Function to scan the targets using python-nmap
+# TCP quick scan of all ports
 def tcp_nmap(target):
     # Create an nmap scanner object
     nm = nmap.PortScanner()
 
-    # Run a TCP scan and a UDP scan
+    # Run initial TCP sweep
     try:
         # TCP Scan
         print(f"[+] Running Full TCP scan on {target} to determine which ports are open...")
         nm.scan(target, arguments=f"-p80 -oN {output_dir}/results/quick_nmap_tcp")  # only on port 80 to prevent long waits in testing, then -p-
         tcp_ports = nm[target]['tcp'].keys() if 'tcp' in nm[target] else []
+        tcp_services = nm[target]['name'].keys() if 'name' in nm[target] else []
+        #print(tcp_services)
         print(f"[+] TCP Ports open on {target}: {list(tcp_ports)}")
 
         # Tabulate open TCP ports an store them in a set
@@ -103,16 +103,12 @@ def tcp_nmap(target):
 
     except Exception as e:
         print(f"[-] An error occurred during scanning: {e}")
-        '''
-        #Debug logic. Pass open_ports to another function
-    for port in open_ports:
-        print(port)
-        '''
     return open_tcp
     
 def test_function(open_tcp):
     for port in open_tcp: 
-        print(f"Open TCP = {open_tcp}for host = {target}, test_value = {port}")
+        print(f"*** Test Statement*** Target = {target} Open TCP = {open_tcp}, port = {port}")
+        #print(f"*** Test Statement*** {tcp_services}") # how to access service name??
     
 
 

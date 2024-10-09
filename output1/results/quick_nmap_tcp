@@ -1,8 +1,8 @@
-# Nmap 7.94SVN scan initiated Wed Oct  9 16:04:28 2024 as: /usr/lib/nmap/nmap -oX - -p80 -oN output1/results/quick_nmap_tcp 192.168.230.213
+# Nmap 7.94SVN scan initiated Wed Oct  9 16:56:05 2024 as: /usr/lib/nmap/nmap -oX - -p80 -oN output1/results/quick_nmap_tcp 192.168.230.213
 Nmap scan report for 192.168.230.213
-Host is up (0.048s latency).
+Host is up (0.049s latency).
 
 PORT   STATE SERVICE
 80/tcp open  http
 
-# Nmap done at Wed Oct  9 16:04:28 2024 -- 1 IP address (1 host up) scanned in 0.24 seconds
+# Nmap done at Wed Oct  9 16:56:05 2024 -- 1 IP address (1 host up) scanned in 0.28 seconds
