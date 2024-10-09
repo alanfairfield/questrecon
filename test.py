@@ -4,9 +4,9 @@ import nmap
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import as_completed
-'''The other program version uses ProcessPoolExecutor to create distinct processes for multiple concurrent scans. This is good for operations that are more CPU-intensive 
+'''This program version uses ProcessPoolExecutor to create distinct processes for multiple concurrent scans. This is good for operations that are more CPU-intensive 
 (like nmap script scans, maybe dirbusting, etc.) but may have more unnecessary overhead for enumeration steps that are primarily bound by I/O, like basic nmap port-sweeps.
-This program version, 'test.py', will use python3-nmap's async scan function for comparison.'''
+The other program version which will be titled 'test.py' will use python3-nmap's async scan function for comparison.'''
 
 # Function to print ASCII art 
 def print_ascii_art():
@@ -46,7 +46,6 @@ def create_output_dir():
             print(f"[+] Output directory created: {output_dir}/results")
         except Exception as e:
             print(f"[-] Something went wrong with the creation of the output directory! Error: {e}")
-   
 
 # Create directory structure for each host and their ports
 def create_directory_structure(host, ports):
@@ -64,18 +63,14 @@ def create_directory_structure(host, ports):
 # UDP Scan
 
 def udp_nmap(target):
-    nma = nmap.PortScannerAsync()
+    nm = nmap.PortScanner()
 
     try:
 
         print(f"[+] Running Quick UDP scan on {target}...")
-        nma.scan(target, arguments=f"-sU -oN {output_dir}/results/quick_nmap_udp",callback=create_directory_structure)  # Basic UDP scan
-        udp_ports = nma[target]['udp'].keys() if 'udp' in nma[target] else []
+        nm.scan(target, arguments=f"-sU -oN {output_dir}/results/quick_nmap_udp")  # Basic UDP scan
+        udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
         print(f"[+] UDP Ports open on {target}: {list(udp_ports)}")
-
-        while nma.still_scanning():
-            print("...", flush=True)
-            nma.wait(10)
 
         # Tabulate open UDP ports and store them in a set
         open_udp = set(udp_ports)
@@ -95,9 +90,8 @@ def tcp_nmap(target):
     # Run a TCP scan and a UDP scan
     try:
         # TCP Scan
-        print(f"[+] Running Quick TCP scan on {target}...")
-        nm.scan(target, arguments=f"-oN {output_dir}/results/quick_nmap_tcp")  # Basic TCP scan
-
+        print(f"[+] Running Full TCP scan on {target} to determine which ports are open...")
+        nm.scan(target, arguments=f"-p80 -oN {output_dir}/results/quick_nmap_tcp")  # only on port 80 to prevent long waits in testing, then -p-
         tcp_ports = nm[target]['tcp'].keys() if 'tcp' in nm[target] else []
         print(f"[+] TCP Ports open on {target}: {list(tcp_ports)}")
 
@@ -116,17 +110,22 @@ def tcp_nmap(target):
         '''
     return open_tcp
     
+def test_function(open_tcp):
+    tcp_nmap(target)
+    for port in open_tcp: 
+        print(f"Open TCP = {open_tcp}for host = {target}, test_value = {port}")
+    
 
 
 # Handle multiple targets from a file
-def scan_multiple_hosts(hosts_file):
 
+def scan_multiple_hosts(hosts_file):
     with open(hosts_file, 'r') as file:
         hosts = [line.strip() for line in file.readlines() if line.strip()]
-
     for host in hosts:
-        udp_nmap(host)
-        tcp_nmap(host)
+        with ProcessPoolExecutor() as executor:
+            executor.submit(udp_nmap, host)
+            executor.submit(tcp_nmap, host)
 
 # Main 
 
@@ -135,20 +134,15 @@ def main():
     create_output_dir()
 
     if target:
-        udp_nmap(target)
-        tcp_nmap(target)
-
+        test_function(tcp_nmap(target))
+        #with ProcessPoolExecutor() as executor:
+            #executor.submit(udp_nmap, target)
+            #executor.submit(tcp_nmap, target)
+        #test_function(open_tcp)
     elif hosts:
         scan_multiple_hosts(hosts)
-
     else:
         print("[-] Please specify a target using '-t' or provide a hosts file using '-H'")
-
-'''logic to allow for no output_dir argument, and if no argument, create the parent results folder in current working dir:
-if not output_dir:
-        output_dir = Path.cwd()
-'''
-        
 
 # Run the program
 if __name__ == "__main__":

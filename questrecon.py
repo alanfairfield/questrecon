@@ -90,7 +90,7 @@ def tcp_nmap(target):
     # Run a TCP scan and a UDP scan
     try:
         # TCP Scan
-        print(f"[+] Running Quick TCP scan on {target}...")
+        print(f"[+] Running Full TCP scan on {target} to determine which ports are open...")
         nm.scan(target, arguments=f"-p- -oN {output_dir}/results/quick_nmap_tcp")  # Full TCP Scan done asynchronously. Need new function to do a quick scan so that the program can proceed with dirbusting, etc., then take additional ports found by these slower scans and run further enum on them as-applicable
         tcp_ports = nm[target]['tcp'].keys() if 'tcp' in nm[target] else []
         print(f"[+] TCP Ports open on {target}: {list(tcp_ports)}")
