@@ -4,9 +4,6 @@ import nmap
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import as_completed
-'''This program version uses ProcessPoolExecutor to create distinct processes for multiple concurrent scans. This is good for operations that are more CPU-intensive 
-(like nmap script scans, maybe dirbusting, etc.) but may have more unnecessary overhead for enumeration steps that are primarily bound by I/O, like basic nmap port-sweeps.
-The other program version which will be titled 'test.py' will use python3-nmap's async scan function for comparison.'''
 
 # Function to print ASCII art 
 def print_ascii_art():
@@ -91,7 +88,7 @@ def tcp_nmap(target):
         print(f"[+] Running Full TCP scan on {target} to determine which ports are open...")
         nm.scan(target, arguments=f"-p80 -oN {output_dir}/results/quick_nmap_tcp")  # only on port 80 to prevent long waits in testing, then -p-
         tcp_ports = nm[target]['tcp'].keys() if 'tcp' in nm[target] else []
-        tcp_services = nm[target]['name'].keys() if 'name' in nm[target] else []
+        #tcp_service = nm[host][proto][port]['name']
         #print(tcp_services)
         print(f"[+] TCP Ports open on {target}: {list(tcp_ports)}")
 
@@ -103,12 +100,13 @@ def tcp_nmap(target):
 
     except Exception as e:
         print(f"[-] An error occurred during scanning: {e}")
-    return open_tcp
+    return open_tcp 
+
     
-def test_function(open_tcp):
+def tcp_service(open_tcp): # test function to fetch open_tcp and manipulate it
     for port in open_tcp: 
         print(f"*** Test Statement*** Target = {target} Open TCP = {open_tcp}, port = {port}")
-        #print(f"*** Test Statement*** {tcp_services}") # how to access service name??
+        #print(f"*** Test Statement*** {tcp_service}") # how to access service name??
     
 
 
@@ -129,7 +127,7 @@ def main():
     create_output_dir()
 
     if target:
-        test_function(tcp_nmap(target))
+        tcp_service(tcp_nmap(target))
         #with ProcessPoolExecutor() as executor:
             #executor.submit(udp_nmap, target)
             #executor.submit(tcp_nmap, target)
@@ -142,3 +140,13 @@ def main():
 # Run the program
 if __name__ == "__main__":
     main()
+
+'''
+
+#Access services associated with open ports??
+for port in ports:
+    tcp_service = nm[target][port]['name']
+    print(f"Service Name(s) = {tcp_service}")
+
+'''
+

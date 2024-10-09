@@ -4,9 +4,6 @@ import nmap
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import as_completed
-'''This program version uses ProcessPoolExecutor to create distinct processes for multiple concurrent scans. This is good for operations that are more CPU-intensive 
-(like nmap script scans, maybe dirbusting, etc.) but may have more unnecessary overhead for enumeration steps that are primarily bound by I/O, like basic nmap port-sweeps.
-The other program version which will be titled 'test.py' will use python3-nmap's async scan function for comparison.'''
 
 # Function to print ASCII art 
 def print_ascii_art():
