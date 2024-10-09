@@ -111,7 +111,6 @@ def tcp_nmap(target):
     return open_tcp
     
 def test_function(open_tcp):
-    tcp_nmap(target)
     for port in open_tcp: 
         print(f"Open TCP = {open_tcp}for host = {target}, test_value = {port}")
     
