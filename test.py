@@ -35,7 +35,7 @@ target = args.target
 hosts = args.hosts
 output_dir = args.out
 
-# Create output directory if it doesn't alreadyexist
+# Create output directory if it doesn't already exist
 def create_output_dir():
     if not os.path.isdir(output_dir):
         try:
@@ -86,7 +86,7 @@ def tcp_nmap(target):
     try:
         # TCP Scan
         print(f"[+] Running Full TCP scan on {target} to determine which ports are open...")
-        nm.scan(target, arguments=f"-p80 -oN {output_dir}/results/quick_nmap_tcp")  # only on port 80 to prevent long waits in testing, then -p-
+        nm.scan(target, arguments=f"-p- -oN {output_dir}/results/quick_nmap_tcp")  # make it output to {output_dir}/results/{target}/quick_nmap_tcp
         tcp_ports = nm[target]['tcp'].keys() if 'tcp' in nm[target] else []
         #tcp_service = nm[host][proto][port]['name']
         #print(tcp_services)
@@ -104,9 +104,17 @@ def tcp_nmap(target):
 
     
 def tcp_service(open_tcp): # test function to fetch open_tcp and manipulate it
+    nm = nmap.PortScanner()
     for port in open_tcp: 
+        nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/tcp/{port}/tcp_{port}_service_scan") # make it output to {output_dir}/results/{target}/tcp/{port}/tcp_{port}_service_scan"
         print(f"*** Test Statement*** Target = {target} Open TCP = {open_tcp}, port = {port}")
         #print(f"*** Test Statement*** {tcp_service}") # how to access service name??
+
+def udp_service(open_udp): # test function to fetch open_tcp and manipulate it
+    nm = nmap.PortScanner()
+    for port in open_udp: 
+        nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/udp/{port}/udp_{port}_service_scan") # make it output to {output_dir}/results/{target}/udp/{port}/tcp_{port}_service_scan"
+        print(f"*** Test Statement*** Target = {target} Open UDP = {open_udp}, port = {port}")
     
 
 
@@ -127,11 +135,11 @@ def main():
     create_output_dir()
 
     if target:
-        tcp_service(tcp_nmap(target))
-        #with ProcessPoolExecutor() as executor:
-            #executor.submit(udp_nmap, target)
-            #executor.submit(tcp_nmap, target)
+        with ProcessPoolExecutor() as executor:
+            executor.submit(udp_nmap, target)
+            executor.submit(tcp_service(tcp_nmap(target)))
         #test_function(open_tcp)
+        #tcp_service(tcp_nmap(target))
     elif hosts:
         scan_multiple_hosts(hosts)
     else:
