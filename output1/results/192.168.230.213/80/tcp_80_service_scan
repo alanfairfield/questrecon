@@ -1,0 +1,9 @@
+# Nmap 7.94SVN scan initiated Wed Oct  9 22:12:33 2024 as: /usr/lib/nmap/nmap -oX - -p80 -sV -oN output1/results/192.168.230.213/80/tcp_80_service_scan 192.168.230.213
+Nmap scan report for 192.168.230.213
+Host is up (0.037s latency).
+
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Apache httpd 2.4.41 ((Ubuntu))
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Wed Oct  9 22:12:40 2024 -- 1 IP address (1 host up) scanned in 6.82 seconds
