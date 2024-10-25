@@ -108,14 +108,14 @@ def tcp_service(open_tcp):
     nm = nmap.PortScanner()
     for port in open_tcp: 
         nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/tcp{port}_service_scan") 
-        print(f"*** Test Statement*** Target = {target} port = {port}")
+        print(f"*** Test Statement*** Target = {target} TCP port = {port}")
         #print(f"*** Test Statement*** {tcp_service}") # how to access service name??
 
 def udp_service(open_udp): 
     nm = nmap.PortScanner()
     for port in open_udp: 
         nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/udp{port}_service_scan") 
-        print(f"*** Test Statement*** Target = {target} Open UDP = {open_udp}, port = {port}")
+        print(f"*** Test Statement*** Target = {target} Open UDP = {open_udp}, UDP port = {port}")
     
 
 

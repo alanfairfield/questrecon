@@ -1,10 +1,10 @@
-# Nmap 7.94SVN scan initiated Thu Oct 24 22:47:24 2024 as: /usr/lib/nmap/nmap -oX - -p513 -sV -sC -oN MSF/results/192.168.56.4/513/tcp513_service_scan 192.168.56.4
+# Nmap 7.94SVN scan initiated Thu Oct 24 23:07:39 2024 as: /usr/lib/nmap/nmap -oX - -p513 -sV -sC -oN MSF/results/192.168.56.4/513/tcp513_service_scan 192.168.56.4
 Nmap scan report for 192.168.56.4
-Host is up (0.00028s latency).
+Host is up (0.00025s latency).
 
 PORT    STATE SERVICE VERSION
 513/tcp open  login
 MAC Address: 08:00:27:DD:AC:1C (Oracle VirtualBox virtual NIC)
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Thu Oct 24 22:47:35 2024 -- 1 IP address (1 host up) scanned in 11.38 seconds
+# Nmap done at Thu Oct 24 23:07:50 2024 -- 1 IP address (1 host up) scanned in 11.35 seconds

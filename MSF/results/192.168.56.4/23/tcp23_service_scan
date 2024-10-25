@@ -1,6 +1,6 @@
-# Nmap 7.94SVN scan initiated Thu Oct 24 22:48:14 2024 as: /usr/lib/nmap/nmap -oX - -p23 -sV -sC -oN MSF/results/192.168.56.4/23/tcp23_service_scan 192.168.56.4
+# Nmap 7.94SVN scan initiated Thu Oct 24 23:08:49 2024 as: /usr/lib/nmap/nmap -oX - -p23 -sV -sC -oN MSF/results/192.168.56.4/23/tcp23_service_scan 192.168.56.4
 Nmap scan report for 192.168.56.4
-Host is up (0.00038s latency).
+Host is up (0.00050s latency).
 
 PORT   STATE SERVICE VERSION
 23/tcp open  telnet  Linux telnetd
@@ -8,4 +8,4 @@ MAC Address: 08:00:27:DD:AC:1C (Oracle VirtualBox virtual NIC)
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Thu Oct 24 22:48:22 2024 -- 1 IP address (1 host up) scanned in 7.42 seconds
+# Nmap done at Thu Oct 24 23:08:57 2024 -- 1 IP address (1 host up) scanned in 7.36 seconds
