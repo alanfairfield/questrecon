@@ -39,15 +39,15 @@ output_dir = args.out
 def create_output_dir():
     if not os.path.isdir(output_dir):
         try:
-            os.makedirs(f'{output_dir}/results')
-            print(f"[+] Output directory created: {output_dir}/results")
+            os.makedirs(f'{output_dir}/results/{target}')
+            print(f"[+] Output directory created: {output_dir}/results/{target}")
         except Exception as e:
             print(f"[-] Something went wrong with the creation of the output directory! Error: {e}")
 
 # Create directory structure for each host and their ports
 def create_directory_structure(host, ports):
     # Create directory for the host
-    host_dir = Path(output_dir) / "results" / host
+    host_dir = Path(output_dir) / "results" / host 
     host_dir.mkdir(parents=True, exist_ok=True)
     print(f"[+] Created directory for host: {host_dir}")
 
@@ -63,7 +63,7 @@ def udp_nmap(target):
     nm = nmap.PortScanner()
     try:
         print(f"[+] Running Quick UDP scan on {target}...")
-        nm.scan(target, arguments=f"-sU -oN {output_dir}/results/quick_nmap_udp")  # Basic UDP scan
+        nm.scan(target, arguments=f"-sU -oN {output_dir}/results/{target}/quick_nmap_udp")  # Basic UDP scan
         udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
         print(f"[+] UDP Ports open on {target}: {list(udp_ports)}")
 
@@ -107,7 +107,7 @@ def tcp_service(open_tcp): # test function to fetch open_tcp and manipulate it
     nm = nmap.PortScanner()
     for port in open_tcp: 
         nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/{port}_service_scan") # make it output to {output_dir}/results/{target}/tcp_{port}/tcp_{port}_service_scan"
-        print(f"*** Test Statement*** Target = {target} Open TCP = {open_tcp}, port = {port}")
+        print(f"*** Test Statement*** Target = {target} port = {port}")
         #print(f"*** Test Statement*** {tcp_service}") # how to access service name??
 
 def udp_service(open_udp): # test function to fetch open_tcp and manipulate it
