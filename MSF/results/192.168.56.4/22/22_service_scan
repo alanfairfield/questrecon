@@ -1,1 +1,0 @@
-# Nmap 7.94SVN scan initiated Thu Oct 24 22:27:47 2024 as: /usr/lib/nmap/nmap -oX - -p22 -sV -sC -oN MSF/results/192.168.56.4/22/22_service_scan 192.168.56.4
