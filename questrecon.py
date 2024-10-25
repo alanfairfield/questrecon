@@ -3,6 +3,7 @@ import argparse
 import nmap
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import as_completed
 
 # Function to print ASCII art 
@@ -103,17 +104,17 @@ def tcp_nmap(target):
     return open_tcp 
 
     
-def tcp_service(open_tcp): # test function to fetch open_tcp and manipulate it
+def tcp_service(open_tcp): 
     nm = nmap.PortScanner()
     for port in open_tcp: 
-        nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/tcp{port}_service_scan") # make it output to {output_dir}/results/{target}/tcp_{port}/tcp_{port}_service_scan"
+        nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/tcp{port}_service_scan") 
         print(f"*** Test Statement*** Target = {target} port = {port}")
         #print(f"*** Test Statement*** {tcp_service}") # how to access service name??
 
-def udp_service(open_udp): # test function to fetch open_tcp and manipulate it
+def udp_service(open_udp): 
     nm = nmap.PortScanner()
     for port in open_udp: 
-        nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/udp{port}_service_scan") # make it output to {output_dir}/results/{target}/udp_{port}/tcp_{port}_service_scan"
+        nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/udp{port}_service_scan") 
         print(f"*** Test Statement*** Target = {target} Open UDP = {open_udp}, port = {port}")
     
 
@@ -135,8 +136,8 @@ def main():
     create_output_dir()
 
     if target:
-        with ProcessPoolExecutor() as executor:
-            executor.submit(udp_nmap, target)
+        with ThreadPoolExecutor() as executor:
+            executor.submit(udp_nmap, target) # running executor.submit(udp_service(udp_nmap(target))) holds up the process for some reason, delaying the onset of TCP scanning. Investigate
             executor.submit(tcp_service(tcp_nmap(target)))
         #test_function(open_tcp)
         #tcp_service(tcp_nmap(target))

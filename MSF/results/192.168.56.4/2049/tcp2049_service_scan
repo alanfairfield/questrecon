@@ -1,10 +1,10 @@
-# Nmap 7.94SVN scan initiated Thu Oct 24 22:32:29 2024 as: /usr/lib/nmap/nmap -oX - -p2049 -sV -sC -oN MSF/results/192.168.56.4/2049/tcp2049_service_scan 192.168.56.4
+# Nmap 7.94SVN scan initiated Thu Oct 24 22:47:41 2024 as: /usr/lib/nmap/nmap -oX - -p2049 -sV -sC -oN MSF/results/192.168.56.4/2049/tcp2049_service_scan 192.168.56.4
 Nmap scan report for 192.168.56.4
-Host is up (0.00032s latency).
+Host is up (0.00078s latency).
 
 PORT     STATE SERVICE VERSION
 2049/tcp open  nfs     2-4 (RPC #100003)
 MAC Address: 08:00:27:DD:AC:1C (Oracle VirtualBox virtual NIC)
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Thu Oct 24 22:32:41 2024 -- 1 IP address (1 host up) scanned in 11.35 seconds
+# Nmap done at Thu Oct 24 22:47:47 2024 -- 1 IP address (1 host up) scanned in 6.34 seconds
