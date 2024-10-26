@@ -1,1 +1,0 @@
-# Nmap 7.94SVN scan initiated Thu Oct 24 23:09:02 2024 as: /usr/lib/nmap/nmap -oX - -p6697 -sV -sC -oN MSF/results/192.168.56.4/6697/tcp6697_service_scan 192.168.56.4

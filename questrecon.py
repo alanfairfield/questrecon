@@ -108,14 +108,14 @@ def tcp_service(open_tcp):
     nm = nmap.PortScanner()
     for port in open_tcp: 
         nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/tcp{port}_service_scan") 
-        print(f"*** Test Statement*** Target = {target} TCP port = {port}")
+        print(f"*** Test Statement tcp_service *** Target = {target} TCP port = {port}")
         #print(f"*** Test Statement*** {tcp_service}") # how to access service name??
 
 def udp_service(open_udp): 
     nm = nmap.PortScanner()
     for port in open_udp: 
         nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/udp{port}_service_scan") 
-        print(f"*** Test Statement*** Target = {target} Open UDP = {open_udp}, UDP port = {port}")
+        print(f"*** Test Statement udp_service *** Target = {target} UDP port = {port}")
     
 
 
@@ -125,9 +125,11 @@ def scan_multiple_hosts(hosts_file):
     with open(hosts_file, 'r') as file:
         hosts = [line.strip() for line in file.readlines() if line.strip()]
     for host in hosts:
-        with ProcessPoolExecutor() as executor:
-            executor.submit(udp_nmap, host)
-            executor.submit(tcp_nmap, host)
+        if not os.path.isdir(f'{output_dir}/results/{host}'):
+            os.makedirs(f'{output_dir}/results/{host}')
+            with ThreadPoolExecutor() as executor:
+                executor.submit(udp_nmap, host)
+                executor.submit(tcp_service(tcp_nmap(host)))
 
 # Main 
 

@@ -1,1 +1,0 @@
-# Nmap 7.94SVN scan initiated Wed Oct  9 22:14:38 2024 as: /usr/lib/nmap/nmap -oX - -p- -oN output1/results/quick_nmap_tcp 192.168.230.213
