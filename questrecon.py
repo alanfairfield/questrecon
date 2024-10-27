@@ -125,11 +125,11 @@ def scan_multiple_hosts(hosts_file):
     with open(hosts_file, 'r') as file:
         hosts = [line.strip() for line in file.readlines() if line.strip()]
     for host in hosts:
-        if not os.path.isdir(f'{output_dir}/results/{host}'):
-            os.makedirs(f'{output_dir}/results/{host}')
-            with ThreadPoolExecutor() as executor:
-                executor.submit(udp_nmap, host)
-                executor.submit(tcp_service(tcp_nmap(host)))
+        host_dir = Path(output_dir) / "results" / host 
+        host_dir.mkdir(parents=True, exist_ok=True)
+        with ThreadPoolExecutor() as executor:
+            executor.submit(udp_nmap, host)
+            executor.submit(tcp_nmap, host) #find way to initiate service scans when reading host file (as opposed to scanning -t targets)
 
 # Main 
 
