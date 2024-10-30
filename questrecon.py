@@ -3,8 +3,8 @@ import argparse
 import nmap
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor
-from concurrent.futures import ThreadPoolExecutor
-from concurrent.futures import as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 
 # Function to print ASCII art 
 def print_ascii_art():
@@ -139,7 +139,7 @@ def main():
 
     if target:
         with ThreadPoolExecutor() as executor:
-            executor.submit(udp_nmap, target) # running executor.submit(udp_service(udp_nmap(target))) holds up the process for some reason, delaying the onset of TCP scanning. Investigate
+            executor.submit(udp_service(udp_nmap(target))) # running executor.submit(udp_service(udp_nmap(target))) holds up the process for some reason, delaying the onset of TCP scanning. Investigate
             executor.submit(tcp_service(tcp_nmap(target)))
         #test_function(open_tcp)
         #tcp_service(tcp_nmap(target))

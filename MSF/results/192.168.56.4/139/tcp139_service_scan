@@ -1,1 +1,27 @@
-# Nmap 7.94SVN scan initiated Sat Oct 26 20:26:18 2024 as: /usr/lib/nmap/nmap -oX - -p139 -sV -sC -oN MSF/results/192.168.56.4/139/tcp139_service_scan 192.168.56.4
+# Nmap 7.94SVN scan initiated Tue Oct 29 20:08:09 2024 as: /usr/lib/nmap/nmap -oX - -p139 -sV -sC -oN MSF/results/192.168.56.4/139/tcp139_service_scan 192.168.56.4
+Nmap scan report for 192.168.56.4
+Host is up (0.00036s latency).
+
+PORT    STATE SERVICE     VERSION
+139/tcp open  netbios-ssn Samba smbd 3.0.20-Debian (workgroup: WORKGROUP)
+MAC Address: 08:00:27:DD:AC:1C (Oracle VirtualBox virtual NIC)
+
+Host script results:
+| smb-os-discovery: 
+|   OS: Unix (Samba 3.0.20-Debian)
+|   Computer name: metasploitable
+|   NetBIOS computer name: 
+|   Domain name: localdomain
+|   FQDN: metasploitable.localdomain
+|_  System time: 2024-10-29T20:08:20-04:00
+|_smb2-time: Protocol negotiation failed (SMB2)
+|_clock-skew: mean: 1h59m59s, deviation: 2h49m42s, median: 0s
+|_nbstat: NetBIOS name: METASPLOITABLE, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Tue Oct 29 20:08:20 2024 -- 1 IP address (1 host up) scanned in 11.36 seconds
