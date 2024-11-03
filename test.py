@@ -64,7 +64,7 @@ def udp_nmap(target):
     nm = nmap.PortScanner()
     try:
         print(f"[+] Running Quick UDP scan on {target}...")
-        nm.scan(target, arguments=f"-sU -oN {output_dir}/results/{target}/quick_nmap_udp")  # Basic UDP scan
+        nm.scan(target, arguments=f"-sU -F -oN {output_dir}/results/{target}/quick_nmap_udp")  # Basic UDP scan, -F for only top 100 ports
         udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
         print(f"[+] UDP Ports open on {target}: {list(udp_ports)}")
 
@@ -77,13 +77,6 @@ def udp_nmap(target):
     except Exception as e:
         print(f"[-] An error occured during scanning: {e}")
     return open_udp
-
-def udp_service(open_udp): 
-    nm = nmap.PortScanner()
-    for port in open_udp: 
-        nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/udp_{port}_service_scan") 
-        print(f"*** Test Statement udp_service *** Target = {target} UDP port = {port}")
-    
 
 # TCP quick scan of all ports
 def tcp_nmap(target):
@@ -114,10 +107,16 @@ def tcp_nmap(target):
 def tcp_service(open_tcp): 
     nm = nmap.PortScanner()
     for port in open_tcp: 
-        nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/tcp_{port}_service_scan") 
-        print(f"*** Test Statement Running Service Scan. Target = {target} TCP port = {port}")
+        nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/tcp{port}_service_scan") 
+        print(f"*** Test Statement tcp_service *** Target = {target} TCP port = {port}")
         #print(f"*** Test Statement*** {tcp_service}") # how to access service name??
 
+def udp_service(open_udp): 
+    nm = nmap.PortScanner()
+    for port in open_udp: 
+        nm.scan(target, arguments=f"-p{port} -sV -sC -sU -oN {output_dir}/results/{target}/{port}/udp{port}_service_scan") 
+        print(f"*** Test Statement udp_service *** Target = {target} UDP port = {port}")
+    
 
 
 # Handle multiple targets from a file
@@ -140,13 +139,9 @@ def main():
 
     if target:
         with ThreadPoolExecutor() as executor:
+            #executor.submit(tcp_service(tcp_nmap(target)))
             executor.submit(udp_service(udp_nmap(target))) # running executor.submit(udp_service(udp_nmap(target))) holds up the process for some reason, delaying the onset of TCP scanning. Investigate
-
-        with ThreadPoolExecutor() as executor:
-            executor.submit(tcp_service(tcp_nmap(target)))
-
-            #executor.submit(udp_service(udp_nmap(target))) # running executor.submit(udp_service(udp_nmap(target))) holds up the process for some reason, delaying the onset of TCP scanning. Investigate
-            
+            #executor.submit(tcp_service(tcp_nmap(target)))
         #test_function(open_tcp)
         #tcp_service(tcp_nmap(target))
     elif hosts:

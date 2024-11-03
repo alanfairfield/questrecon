@@ -64,7 +64,7 @@ def udp_nmap(target):
     nm = nmap.PortScanner()
     try:
         print(f"[+] Running Quick UDP scan on {target}...")
-        nm.scan(target, arguments=f"-sU -oN {output_dir}/results/{target}/quick_nmap_udp")  # Basic UDP scan
+        nm.scan(target, arguments=f"-sU -F -oN {output_dir}/results/{target}/quick_nmap_udp")  # Basic UDP scan
         udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
         print(f"[+] UDP Ports open on {target}: {list(udp_ports)}")
 
@@ -114,7 +114,7 @@ def tcp_service(open_tcp):
 def udp_service(open_udp): 
     nm = nmap.PortScanner()
     for port in open_udp: 
-        nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/udp{port}_service_scan") 
+        nm.scan(target, arguments=f"-p{port} -sV -sC -sU -oN {output_dir}/results/{target}/{port}/udp{port}_service_scan") 
         print(f"*** Test Statement udp_service *** Target = {target} UDP port = {port}")
     
 
