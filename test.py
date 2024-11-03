@@ -3,7 +3,8 @@ import argparse
 import nmap
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor
-from concurrent.futures import as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 
 # Function to print ASCII art 
 def print_ascii_art():
@@ -39,15 +40,15 @@ output_dir = args.out
 def create_output_dir():
     if not os.path.isdir(output_dir):
         try:
-            os.makedirs(f'{output_dir}/results')
-            print(f"[+] Output directory created: {output_dir}/results")
+            os.makedirs(f'{output_dir}/results/{target}')
+            print(f"[+] Output directory created: {output_dir}/results/{target}")
         except Exception as e:
             print(f"[-] Something went wrong with the creation of the output directory! Error: {e}")
 
 # Create directory structure for each host and their ports
 def create_directory_structure(host, ports):
     # Create directory for the host
-    host_dir = Path(output_dir) / "results" / host
+    host_dir = Path(output_dir) / "results" / host 
     host_dir.mkdir(parents=True, exist_ok=True)
     print(f"[+] Created directory for host: {host_dir}")
 
@@ -63,7 +64,7 @@ def udp_nmap(target):
     nm = nmap.PortScanner()
     try:
         print(f"[+] Running Quick UDP scan on {target}...")
-        nm.scan(target, arguments=f"-sU -oN {output_dir}/results/quick_nmap_udp")  # Basic UDP scan
+        nm.scan(target, arguments=f"-sU -oN {output_dir}/results/{target}/quick_nmap_udp")  # Basic UDP scan
         udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
         print(f"[+] UDP Ports open on {target}: {list(udp_ports)}")
 
@@ -77,6 +78,13 @@ def udp_nmap(target):
         print(f"[-] An error occured during scanning: {e}")
     return open_udp
 
+def udp_service(open_udp): 
+    nm = nmap.PortScanner()
+    for port in open_udp: 
+        nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/udp_{port}_service_scan") 
+        print(f"*** Test Statement udp_service *** Target = {target} UDP port = {port}")
+    
+
 # TCP quick scan of all ports
 def tcp_nmap(target):
     # Create an nmap scanner object
@@ -86,7 +94,7 @@ def tcp_nmap(target):
     try:
         # TCP Scan
         print(f"[+] Running Full TCP scan on {target} to determine which ports are open...")
-        nm.scan(target, arguments=f"-p- -oN {output_dir}/results/quick_nmap_tcp")  # make it output to {output_dir}/results/{target}/quick_nmap_tcp
+        nm.scan(target, arguments=f"-p- -oN {output_dir}/results/{target}/quick_nmap_tcp")  # make it output to {output_dir}/results/{target}/quick_nmap_tcp
         tcp_ports = nm[target]['tcp'].keys() if 'tcp' in nm[target] else []
         #tcp_service = nm[host][proto][port]['name']
         #print(tcp_services)
@@ -103,19 +111,13 @@ def tcp_nmap(target):
     return open_tcp 
 
     
-def tcp_service(open_tcp): # test function to fetch open_tcp and manipulate it
+def tcp_service(open_tcp): 
     nm = nmap.PortScanner()
     for port in open_tcp: 
-        nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/tcp_{port}_service_scan") # make it output to {output_dir}/results/{target}/tcp_{port}/tcp_{port}_service_scan"
-        print(f"*** Test Statement*** Target = {target} Open TCP = {open_tcp}, port = {port}")
+        nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/tcp_{port}_service_scan") 
+        print(f"*** Test Statement Running Service Scan. Target = {target} TCP port = {port}")
         #print(f"*** Test Statement*** {tcp_service}") # how to access service name??
 
-def udp_service(open_udp): # test function to fetch open_tcp and manipulate it
-    nm = nmap.PortScanner()
-    for port in open_udp: 
-        nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/udp_{port}_service_scan") # make it output to {output_dir}/results/{target}/udp_{port}/tcp_{port}_service_scan"
-        print(f"*** Test Statement*** Target = {target} Open UDP = {open_udp}, port = {port}")
-    
 
 
 # Handle multiple targets from a file
@@ -124,9 +126,11 @@ def scan_multiple_hosts(hosts_file):
     with open(hosts_file, 'r') as file:
         hosts = [line.strip() for line in file.readlines() if line.strip()]
     for host in hosts:
-        with ProcessPoolExecutor() as executor:
+        host_dir = Path(output_dir) / "results" / host 
+        host_dir.mkdir(parents=True, exist_ok=True)
+        with ThreadPoolExecutor() as executor:
             executor.submit(udp_nmap, host)
-            executor.submit(tcp_nmap, host)
+            executor.submit(tcp_nmap, host) #find way to initiate service scans when reading host file (as opposed to scanning -t targets)
 
 # Main 
 
@@ -135,9 +139,14 @@ def main():
     create_output_dir()
 
     if target:
-        with ProcessPoolExecutor() as executor:
-            executor.submit(udp_nmap, target)
+        with ThreadPoolExecutor() as executor:
+            executor.submit(udp_service(udp_nmap(target))) # running executor.submit(udp_service(udp_nmap(target))) holds up the process for some reason, delaying the onset of TCP scanning. Investigate
+
+        with ThreadPoolExecutor() as executor:
             executor.submit(tcp_service(tcp_nmap(target)))
+
+            #executor.submit(udp_service(udp_nmap(target))) # running executor.submit(udp_service(udp_nmap(target))) holds up the process for some reason, delaying the onset of TCP scanning. Investigate
+            
         #test_function(open_tcp)
         #tcp_service(tcp_nmap(target))
     elif hosts:
