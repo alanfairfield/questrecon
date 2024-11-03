@@ -1,0 +1,13 @@
+# Nmap 7.94SVN scan initiated Sat Nov  2 22:15:19 2024 as: /usr/lib/nmap/nmap -oX - -sU -F -oN MSFtest/results/192.168.56.4/quick_nmap_udp 192.168.56.4
+Nmap scan report for 192.168.56.4
+Host is up (0.00048s latency).
+Not shown: 95 open|filtered udp ports (no-response)
+PORT     STATE  SERVICE
+53/udp   open   domain
+111/udp  open   rpcbind
+137/udp  open   netbios-ns
+2049/udp open   nfs
+5060/udp closed sip
+MAC Address: 08:00:27:DD:AC:1C (Oracle VirtualBox virtual NIC)
+
+# Nmap done at Sat Nov  2 22:15:21 2024 -- 1 IP address (1 host up) scanned in 1.86 seconds

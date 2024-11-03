@@ -1,0 +1,27 @@
+# Nmap 7.94SVN scan initiated Sat Nov  2 22:12:58 2024 as: /usr/lib/nmap/nmap -oX - -p445 -sV -sC -oN MSF/results/192.168.56.4/445/tcp445_service_scan 192.168.56.4
+Nmap scan report for 192.168.56.4
+Host is up (0.00040s latency).
+
+PORT    STATE SERVICE     VERSION
+445/tcp open  netbios-ssn Samba smbd 3.0.20-Debian (workgroup: WORKGROUP)
+MAC Address: 08:00:27:DD:AC:1C (Oracle VirtualBox virtual NIC)
+
+Host script results:
+| smb-security-mode: 
+|   account_used: <blank>
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+| smb-os-discovery: 
+|   OS: Unix (Samba 3.0.20-Debian)
+|   Computer name: metasploitable
+|   NetBIOS computer name: 
+|   Domain name: localdomain
+|   FQDN: metasploitable.localdomain
+|_  System time: 2024-11-02T22:13:07-04:00
+|_nbstat: NetBIOS name: METASPLOITABLE, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+|_smb2-time: Protocol negotiation failed (SMB2)
+|_clock-skew: mean: 2h00m02s, deviation: 2h49m42s, median: 2s
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sat Nov  2 22:13:05 2024 -- 1 IP address (1 host up) scanned in 6.49 seconds
