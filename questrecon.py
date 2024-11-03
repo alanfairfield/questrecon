@@ -106,10 +106,12 @@ def tcp_nmap(target):
     
 def tcp_service(open_tcp): 
     nm = nmap.PortScanner()
-    for port in open_tcp: 
-        nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/tcp{port}_service_scan") 
-        print(f"*** Test Statement tcp_service *** Target = {target} TCP port = {port}")
-        #print(f"*** Test Statement*** {tcp_service}") # how to access service name??
+    for port in open_tcp:
+        with ThreadPoolExecutor() as executor:
+            executor.submit(nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/tcp{port}_service_scan")) #using ThreadPoolEx here to iterate through service scans faster. If benchmarks show success, apply to udp_service scans as well
+         
+            print(f"*** Test Statement tcp_service *** Target = {target} TCP port = {port}")
+            #print(f"*** Test Statement*** {tcp_service}") # how to access service name??
 
 def udp_service(open_udp): 
     nm = nmap.PortScanner()

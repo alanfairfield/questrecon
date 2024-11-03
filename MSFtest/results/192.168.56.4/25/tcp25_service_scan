@@ -1,6 +1,6 @@
-# Nmap 7.94SVN scan initiated Sat Nov  2 22:10:16 2024 as: /usr/lib/nmap/nmap -oX - -p25 -sV -sC -oN MSF/results/192.168.56.4/25/tcp25_service_scan 192.168.56.4
+# Nmap 7.94SVN scan initiated Sat Nov  2 22:10:23 2024 as: /usr/lib/nmap/nmap -oX - -p25 -sV -sC -oN MSFtest/results/192.168.56.4/25/tcp25_service_scan 192.168.56.4
 Nmap scan report for 192.168.56.4
-Host is up (0.00087s latency).
+Host is up (0.00029s latency).
 
 PORT   STATE SERVICE VERSION
 25/tcp open  smtp    Postfix smtpd
@@ -8,16 +8,16 @@ PORT   STATE SERVICE VERSION
 |   SSLv2 supported
 |   ciphers: 
 |     SSL2_RC4_128_WITH_MD5
-|     SSL2_DES_192_EDE3_CBC_WITH_MD5
 |     SSL2_DES_64_CBC_WITH_MD5
+|     SSL2_RC2_128_CBC_EXPORT40_WITH_MD5
+|     SSL2_DES_192_EDE3_CBC_WITH_MD5
 |     SSL2_RC4_128_EXPORT40_WITH_MD5
-|     SSL2_RC2_128_CBC_WITH_MD5
-|_    SSL2_RC2_128_CBC_EXPORT40_WITH_MD5
-|_smtp-commands: metasploitable.localdomain, PIPELINING, SIZE 10240000, VRFY, ETRN, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, DSN
-|_ssl-date: 2024-11-03T02:10:19+00:00; +3s from scanner time.
+|_    SSL2_RC2_128_CBC_WITH_MD5
 | ssl-cert: Subject: commonName=ubuntu804-base.localdomain/organizationName=OCOSA/stateOrProvinceName=There is no such thing outside US/countryName=XX
 | Not valid before: 2010-03-17T14:07:45
 |_Not valid after:  2010-04-16T14:07:45
+|_ssl-date: 2024-11-03T02:10:26+00:00; +3s from scanner time.
+|_smtp-commands: metasploitable.localdomain, PIPELINING, SIZE 10240000, VRFY, ETRN, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, DSN
 MAC Address: 08:00:27:DD:AC:1C (Oracle VirtualBox virtual NIC)
 Service Info: Host:  metasploitable.localdomain
 
@@ -25,4 +25,4 @@ Host script results:
 |_clock-skew: 2s
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Sat Nov  2 22:10:16 2024 -- 1 IP address (1 host up) scanned in 0.44 seconds
+# Nmap done at Sat Nov  2 22:10:23 2024 -- 1 IP address (1 host up) scanned in 0.36 seconds

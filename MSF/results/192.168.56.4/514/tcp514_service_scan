@@ -1,10 +1,10 @@
-# Nmap 7.94SVN scan initiated Sat Nov  2 22:00:08 2024 as: /usr/lib/nmap/nmap -oX - -p514 -sV -sC -oN MSF/results/192.168.56.4/514/tcp514_service_scan 192.168.56.4
+# Nmap 7.94SVN scan initiated Sat Nov  2 22:09:43 2024 as: /usr/lib/nmap/nmap -oX - -p514 -sV -sC -oN MSF/results/192.168.56.4/514/tcp514_service_scan 192.168.56.4
 Nmap scan report for 192.168.56.4
-Host is up (0.00030s latency).
+Host is up (0.00051s latency).
 
 PORT    STATE SERVICE VERSION
 514/tcp open  shell   Netkit rshd
 MAC Address: 08:00:27:DD:AC:1C (Oracle VirtualBox virtual NIC)
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Sat Nov  2 22:00:09 2024 -- 1 IP address (1 host up) scanned in 0.34 seconds
+# Nmap done at Sat Nov  2 22:09:44 2024 -- 1 IP address (1 host up) scanned in 0.38 seconds

@@ -139,7 +139,7 @@ def main():
 
     if target:
         with ThreadPoolExecutor() as executor:
-            #executor.submit(tcp_service(tcp_nmap(target)))
+            executor.submit(tcp_service(tcp_nmap(target)))
             executor.submit(udp_service(udp_nmap(target))) # running executor.submit(udp_service(udp_nmap(target))) holds up the process for some reason, delaying the onset of TCP scanning. Investigate
             #executor.submit(tcp_service(tcp_nmap(target)))
         #test_function(open_tcp)
