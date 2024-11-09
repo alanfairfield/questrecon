@@ -1,0 +1,10 @@
+# Nmap 7.94SVN scan initiated Fri Nov  8 22:41:38 2024 as: /usr/lib/nmap/nmap -oX - -p47916 -sV -sC -oN MSFtest/results/192.168.56.4/47916/tcp47916_service_scan 192.168.56.4
+Nmap scan report for 192.168.56.4
+Host is up (0.00033s latency).
+
+PORT      STATE SERVICE  VERSION
+47916/tcp open  nlockmgr 1-4 (RPC #100021)
+MAC Address: 08:00:27:DD:AC:1C (Oracle VirtualBox virtual NIC)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Fri Nov  8 22:41:44 2024 -- 1 IP address (1 host up) scanned in 6.39 seconds

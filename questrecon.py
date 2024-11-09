@@ -139,11 +139,19 @@ def main():
 
     if target:
         with ThreadPoolExecutor() as executor:
-            executor.submit(tcp_service(tcp_nmap(target)))
-            executor.submit(udp_service(udp_nmap(target))) # running executor.submit(udp_service(udp_nmap(target))) holds up the process for some reason, delaying the onset of TCP scanning. Investigate
-            #executor.submit(tcp_service(tcp_nmap(target)))
-        #test_function(open_tcp)
-        #tcp_service(tcp_nmap(target))
+            futures_tcp = executor.submit(tcp_nmap, target) # in this case we are essentially equating futures to 'open_tcp', the return value of tcp_nmap()
+            for future in as_completed([futures_tcp]):
+                #tcp_service(future)
+                executor.submit(tcp_service, futures_tcp.result())
+                print(future.result()) # Test print statement
+            
+            futures_udp = executor.submit(udp_nmap, target)
+            for future in as_completed([futures_udp]):
+                executor.submit(udp_service, futures_udp.result())
+                
+
+
+
     elif hosts:
         scan_multiple_hosts(hosts)
     else:

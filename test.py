@@ -139,13 +139,15 @@ def main():
 
     if target:
         with ThreadPoolExecutor() as executor:
-            futures = executor.submit(tcp_nmap, target) # in this case we are essentially equating futures to 'open_tcp', the return value of tcp_nmap()
-            
-
-            for future in as_completed([futures]):
+            futures_tcp = executor.submit(tcp_nmap, target) # in this case we are essentially equating futures to 'open_tcp', the return value of tcp_nmap()
+            for future in as_completed([futures_tcp]):
                 #tcp_service(future)
-
-                print(future.result())
+                executor.submit(tcp_service, futures_tcp.result())
+                print(future.result()) # Test print statement
+            
+            futures_udp = executor.submit(udp_nmap, target)
+            for future in as_completed([futures_udp]):
+                executor.submit(udp_service, futures_udp.result())
                 
 
 
