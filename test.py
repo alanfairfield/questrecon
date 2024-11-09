@@ -56,7 +56,7 @@ def create_directory_structure(host, ports):
     for port in ports:
         port_dir = host_dir / str(port)
         port_dir.mkdir(parents=True, exist_ok=True)
-        print(f"[+] Created directory for port {port} under host {host}")
+        #print(f"[+] Created directory for port {port} under host {host}")
 
 # UDP Scan
 
@@ -106,7 +106,7 @@ def tcp_nmap(target):
     
 def tcp_service(open_tcp): 
     nm = nmap.PortScanner()
-    for port in open_tcp: 
+    for port in open_tcp:
         nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_dir}/results/{target}/{port}/tcp{port}_service_scan") 
         print(f"*** Test Statement tcp_service *** Target = {target} TCP port = {port}")
         #print(f"*** Test Statement*** {tcp_service}") # how to access service name??
@@ -121,15 +121,27 @@ def udp_service(open_udp):
 
 # Handle multiple targets from a file
 
-def scan_multiple_hosts(hosts_file):
-    with open(hosts_file, 'r') as file:
+def scan_multiple_hosts(hosts):
+    with open(hosts, 'r') as file:
         hosts = [line.strip() for line in file.readlines() if line.strip()]
+
     for host in hosts:
         host_dir = Path(output_dir) / "results" / host 
         host_dir.mkdir(parents=True, exist_ok=True)
+        if host == 'None':
+            pass
+
         with ThreadPoolExecutor() as executor:
-            executor.submit(udp_nmap, host)
-            executor.submit(tcp_nmap, host) #find way to initiate service scans when reading host file (as opposed to scanning -t targets)
+            futures_tcp = executor.submit(tcp_nmap, host) 
+            
+            for future in as_completed([futures_tcp]):
+                executor.submit(tcp_service, futures_tcp.result())
+                print(f'TEST scan multiple hosts function: futures_tcp = {futures_tcp.result()}') # Test statement
+
+            futures_udp = executor.submit(udp_nmap, host)
+            for future in as_completed([futures_udp]):
+                executor.submit(udp_service, futures_udp.result())
+            #find way to initiate service scans when reading host file (as opposed to scanning -t targets)
 
 # Main 
 
@@ -143,7 +155,7 @@ def main():
             for future in as_completed([futures_tcp]):
                 #tcp_service(future)
                 executor.submit(tcp_service, futures_tcp.result())
-                print(future.result()) # Test print statement
+                #print(future.result()) # Test print statement
             
             futures_udp = executor.submit(udp_nmap, target)
             for future in as_completed([futures_udp]):
