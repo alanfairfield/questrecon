@@ -1,0 +1,1 @@
+#Parse the output of individual-port-targeting nmap scans to get specific versions of running services, then run searchsploit, and return the output to a folder called "Vulnerabile_Version_Check"
