@@ -119,7 +119,7 @@ def udp_service(open_udp):
 
 # Handle multiple targets from a file
 
-def scan_multiple_hosts(hosts):
+def scan_multiple_hosts(hosts, output_dir):
     with open(hosts, 'r') as file:
         hosts = [line.strip() for line in file.readlines() if line.strip()]
 
@@ -128,21 +128,35 @@ def scan_multiple_hosts(hosts):
         host_dir.mkdir(parents=True, exist_ok=True)
 
         with ProcessPoolExecutor() as executor:
-            futures_tcp = executor.submit(tcp_nmap, host) 
-            
-        
-            for _ in as_completed([futures_tcp]):
-                executor.submit(tcp_service, host, futures_tcp.result())
-                print(Fore.CYAN + f'Futures TCP Result: {futures_tcp.result()}. scan_multiple_hosts(hosts) function origin' + Style.RESET_ALL)
+            futures = {}
+# Submit tasks for quick TCP and UDP scans for each host
+            for host in hosts:
+                futures_tcp = executor.submit(tcp_nmap, host)
+                futures_udp = executor.submit(udp_nmap, host)
+                futures[host] = {"tcp": futures_tcp, "udp": futures_udp}
+# Process results and launch service scans
+            for host, future_set in futures.items():
+                try:
+                    tcp_ports = future_set["tcp"].result()
+                    udp_ports = future_set["udp"].result()
+                    print(Fore.CYAN + f"[+] TCP Ports for {host}: {list(tcp_ports)}" + Style.RESET_ALL)
+                    print(Fore.CYAN + f"[+] UDP Ports for {host}: {list(udp_ports)}" + Style.RESET_ALL)
 
-            futures_udp = executor.submit(udp_nmap, host)
 
-            
-            for _ in as_completed([futures_udp]):
-                executor.submit(udp_service, futures_udp.result())
+                    # Run service scans for TCP Ports
+                    for port in tcp_ports:
+
+                        tcp_service(host, port)
+                    for port in udp_ports:
+
+                        udp_service(host, port)
+
+                except Exception as e:
+                    print(f"[-] Error processing scans for {host}: {e}")
+       
                 
 
-    #os.rmdir(f'{output_dir}/results/None') #Bug fix
+    os.rmdir(f'{output_dir}/results/None') #Bug fix
 
             #TODO: find way to initiate service scans when reading host file (as opposed to scanning -t targets)
 
@@ -166,7 +180,8 @@ def main():
             for _ in as_completed([futures_udp]):
                 executor.submit(udp_service, futures_udp.result())
     elif hosts:
-        scan_multiple_hosts(hosts)
+        scan_multiple_hosts(hosts, output_dir)
+
     else:
         print("[-] Please specify a target using '-t' or provide a hosts file using '-H'")
 
