@@ -130,16 +130,16 @@ def scan_multiple_hosts(hosts):
         with ProcessPoolExecutor() as executor:
             futures_tcp = executor.submit(tcp_nmap, host) 
             
-            for host in hosts:
-                for _ in as_completed([futures_tcp]):
-                    executor.submit(tcp_service, host, futures_tcp.result())
-                    print(Fore.CYAN + f'Futures TCP Result: {futures_tcp.result()}. scan_multiple_hosts(hosts) function origin' + Style.RESET_ALL)
+        
+            for _ in as_completed([futures_tcp]):
+                executor.submit(tcp_service, host, futures_tcp.result())
+                print(Fore.CYAN + f'Futures TCP Result: {futures_tcp.result()}. scan_multiple_hosts(hosts) function origin' + Style.RESET_ALL)
 
             futures_udp = executor.submit(udp_nmap, host)
 
-            for host in hosts:
-                for _ in as_completed([futures_udp]):
-                    executor.submit(udp_service, futures_udp.result())
+            
+            for _ in as_completed([futures_udp]):
+                executor.submit(udp_service, futures_udp.result())
                 
 
     #os.rmdir(f'{output_dir}/results/None') #Bug fix

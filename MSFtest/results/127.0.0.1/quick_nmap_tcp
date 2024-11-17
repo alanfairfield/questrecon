@@ -1,8 +1,0 @@
-# Nmap 7.94SVN scan initiated Sat Nov 16 23:42:31 2024 as: /usr/lib/nmap/nmap -oX - -p- -oN MSFtest/results/127.0.0.1/quick_nmap_tcp 127.0.0.1
-Nmap scan report for localhost (127.0.0.1)
-Host is up (0.0000050s latency).
-Not shown: 65534 closed tcp ports (reset)
-PORT     STATE SERVICE
-1883/tcp open  mqtt
-
-# Nmap done at Sat Nov 16 23:42:32 2024 -- 1 IP address (1 host up) scanned in 0.80 seconds
