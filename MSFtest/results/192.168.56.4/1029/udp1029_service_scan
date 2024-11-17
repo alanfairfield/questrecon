@@ -1,1 +1,0 @@
-# Nmap 7.94SVN scan initiated Sun Nov 10 00:58:53 2024 as: /usr/lib/nmap/nmap -oX - -p1029 -sV -sC -sU -oN MSFtest/results/192.168.56.4/1029/udp1029_service_scan 192.168.56.4

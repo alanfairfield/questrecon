@@ -127,21 +127,22 @@ def scan_multiple_hosts(hosts):
         host_dir = Path(output_dir) / "results" / host 
         host_dir.mkdir(parents=True, exist_ok=True)
 
-        with ThreadPoolExecutor() as executor:
-            futures = executor.submit(tcp_nmap, host) 
+        with ProcessPoolExecutor() as executor:
+            futures_tcp = executor.submit(tcp_nmap, host) 
             
+            for host in hosts:
+                for _ in as_completed([futures_tcp]):
+                    executor.submit(tcp_service, host, futures_tcp.result())
+                    print(Fore.CYAN + f'Futures TCP Result: {futures_tcp.result()}. scan_multiple_hosts(hosts) function origin' + Style.RESET_ALL)
 
-            for future in as_completed([futures]):
-                executor.submit(tcp_service, futures.result())
-                print(Fore.CYAN + f'Futures TCP Result: {futures.result()}. scan_multiple_hosts(hosts) function origin' + Style.RESET_ALL)
+            futures_udp = executor.submit(udp_nmap, host)
 
-            futures = executor.submit(udp_nmap, host)
-            
-            for future in as_completed([futures]):
-                executor.submit(udp_service, futures.result())
+            for host in hosts:
+                for _ in as_completed([futures_udp]):
+                    executor.submit(udp_service, futures_udp.result())
                 
 
-    os.rmdir(f'{output_dir}/results/None') #Bug fix
+    #os.rmdir(f'{output_dir}/results/None') #Bug fix
 
             #TODO: find way to initiate service scans when reading host file (as opposed to scanning -t targets)
 
@@ -157,12 +158,12 @@ def main():
     if target:
         with ThreadPoolExecutor() as executor:
             futures_tcp = executor.submit(tcp_nmap, target) # in this case futures == 'open_tcp', the return value of tcp_nmap()
-            for future in as_completed([futures_tcp]):
+            for _ in as_completed([futures_tcp]):
                 executor.submit(tcp_service, futures_tcp.result())
             
             futures_udp = executor.submit(udp_nmap, target)
             
-            for future in as_completed([futures_udp]):
+            for _ in as_completed([futures_udp]):
                 executor.submit(udp_service, futures_udp.result())
     elif hosts:
         scan_multiple_hosts(hosts)
