@@ -65,9 +65,12 @@ class Target:
     
     def run_service_scan(self):
         for port in self.open_tcp:
-            tcp_service([port])
+            port_dir = self.create_port_directory(port)
+            tcp_service(self.IP, port, port_dir / f"tcp_{port}_service_scan")
+
         for port in self.open_udp:
-            udp_service([port])
+            port_dir = self.create_port_directory(port)
+            udp_service(self.IP, port, port_dir / f"udp_{port}_service_scan")
 
     def __str__(self):
         return (f"Target(IP={self.IP}, TCP={list(self.open_tcp)}, "
@@ -83,9 +86,11 @@ class HostManager:
 
     def load_hosts(self, host_file):
         with open(host_file, 'r') as file:
-            ip = [line.strip() for line in file.readlines() if line.strip()]
-            if ip:
-                self.targets.append(Target(ip, self.output_dir))
+            for line in file:
+                ip = line.strip()
+                if ip:
+                    # Create a Target object for each IP and add it to the list
+                    self.targets.append(Target(ip, self.output_dir))
     
     def run_scans(self):
         with ProcessPoolExecutor() as executor:
@@ -115,12 +120,12 @@ def tcp_nmap(target, output_file):
         tcp_ports = nm[target]['tcp'].keys() if 'tcp' in nm[target] else []
         print(f"[+] TCP Ports open on {target}: {list(tcp_ports)}")
         # Tabulate open TCP ports an store them in a set
-        open_tcp = set(tcp_ports)
+        return set(tcp_ports)
         
     except Exception as e:
         print(f"[-] Error in TCP scan for {target}: {e}")
 
-        return open_tcp
+        return set()
         
 # UDP scan function
 
@@ -132,32 +137,31 @@ def udp_nmap(target, output_file):
         udp_ports = nm[target]['tcp'].keys() if 'udp' in nm[target] else []
         print(f"[+] TCP Ports open on {target}: {list(udp_ports)}")
         # Tabulate open TCP ports an store them in a set
-        open_udp = set(udp_ports) 
+        return set(udp_ports) 
         
     except Exception as e:
         print(f"[-] Error in TCP scan for {target}: {e}")
 
-        return open_udp
+        return set()
         
 # TCP service scan function
-def tcp_service(target, open_tcp, output_file):
+def tcp_service(target, port, output_file):
     nm = nmap.PortScanner()
-    for port in open_tcp: 
-        try:
-            nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_file}")
-            print(Fore.WHITE + Back.BLACK + Style.BRIGHT + f"[+] Service scan for TCP port {port} on {target}" + Style.RESET_ALL)
-        except Exception as e:
-            print(f"[-] Err in TCP service scan for {target}:{port}: {e}")
+    try:
+        nm.scan(target, arguments=f"-p{port} -sV -sC -oN {output_file}")
+        print(Fore.WHITE + Back.BLACK + Style.BRIGHT + f"[+] Service scan for TCP port {port} on {target}" + Style.RESET_ALL)
+    except Exception as e:
+        print(f"[-] Err in TCP service scan for {target}:{port}: {e}")
 
 # UDP service scan function
-def udp_service(target, open_udp, output_file):
+def udp_service(target, port, output_file):
     nm = nmap.PortScanner()
-    for port in open_udp:
-        try:
-            nm.scan(target, arguments=f"-p{port} -sV -sC -sU -oN {output_file}")
-            print(Fore.WHITE + Back.BLACK + Style.BRIGHT + f"[+] Service scan for UDP port {port} on {target}" + Style.RESET_ALL)
-        except Exception as e:
-            print(f"[-] Error in UDP service scan for {target}:{port}: {e}")
+
+    try:
+        nm.scan(target, arguments=f"-p{port} -sV -sC -sU -oN {output_file}")
+        print(Fore.WHITE + Back.BLACK + Style.BRIGHT + f"[+] Service scan for UDP port {port} on {target}" + Style.RESET_ALL)
+    except Exception as e:
+        print(f"[-] Error in UDP service scan for {target}:{port}: {e}")
 
 # Main function
 def main():
