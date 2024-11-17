@@ -1,7 +1,0 @@
-# Nmap 7.94SVN scan initiated Sun Nov 17 18:10:57 2024 as: /usr/lib/nmap/nmap -oX - -sU -F -oN MSFtest/results/127.0.0.1/quick_nmap_udp 127.0.0.1
-Nmap scan report for localhost (127.0.0.1)
-Host is up (0.0000070s latency).
-All 100 scanned ports on localhost (127.0.0.1) are in ignored states.
-Not shown: 100 closed udp ports (port-unreach)
-
-# Nmap done at Sun Nov 17 18:10:57 2024 -- 1 IP address (1 host up) scanned in 0.23 seconds
