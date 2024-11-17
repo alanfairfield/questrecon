@@ -1,6 +1,6 @@
-# Nmap 7.94SVN scan initiated Sat Nov 16 20:16:13 2024 as: /usr/lib/nmap/nmap -oX - -p- -oN MSFtest/results/192.168.56.4/quick_nmap_tcp 192.168.56.4
+# Nmap 7.94SVN scan initiated Sun Nov 17 16:11:23 2024 as: /usr/lib/nmap/nmap -oX - -p- -oN MSFtest/results/192.168.56.4/quick_nmap_tcp 192.168.56.4
 Nmap scan report for 192.168.56.4
-Host is up (0.00034s latency).
+Host is up (0.00036s latency).
 Not shown: 65505 closed tcp ports (reset)
 PORT      STATE SERVICE
 21/tcp    open  ftp
@@ -29,10 +29,10 @@ PORT      STATE SERVICE
 8009/tcp  open  ajp13
 8180/tcp  open  unknown
 8787/tcp  open  msgsrvr
-33301/tcp open  unknown
-36754/tcp open  unknown
-50150/tcp open  unknown
-59513/tcp open  unknown
+42904/tcp open  unknown
+48215/tcp open  unknown
+50837/tcp open  unknown
+51538/tcp open  unknown
 MAC Address: 08:00:27:DD:AC:1C (Oracle VirtualBox virtual NIC)
 
-# Nmap done at Sat Nov 16 20:16:15 2024 -- 1 IP address (1 host up) scanned in 1.93 seconds
+# Nmap done at Sun Nov 17 16:11:25 2024 -- 1 IP address (1 host up) scanned in 1.83 seconds
