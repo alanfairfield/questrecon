@@ -1,0 +1,64 @@
+# Nmap 7.94SVN scan initiated Sun Nov 17 19:04:49 2024 as: /usr/lib/nmap/nmap -oX - -p1883 -sV -sC -oN MSFtest/results/127.0.0.1/1883/tcp1883_service_scan 127.0.0.1
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.000032s latency).
+
+PORT     STATE SERVICE                  VERSION
+1883/tcp open  mosquitto version 2.0.18
+| mqtt-subscribe: 
+|   Topics and their most recent payloads: 
+|     $SYS/broker/publish/messages/sent: 462
+|     $SYS/broker/load/bytes/received/15min: 17.69
+|     $SYS/broker/messages/sent: 1163
+|     $SYS/broker/load/messages/received/15min: 2.73
+|     $SYS/broker/clients/active: 3
+|     $SYS/broker/load/messages/received/1min: 2.00
+|     $SYS/broker/uptime: 20427 seconds
+|     $SYS/broker/version: mosquitto version 2.0.18
+|     $SYS/broker/publish/messages/received: 0
+|     $SYS/broker/subscriptions/count: 18
+|     $SYS/broker/store/messages/count: 53
+|     $SYS/broker/clients/total: 10
+|     $SYS/broker/store/messages/bytes: 216
+|     $SYS/broker/load/messages/sent/15min: 14.22
+|     $SYS/broker/load/publish/sent/15min: 11.55
+|     $SYS/broker/load/publish/dropped/15min: 0.00
+|     $SYS/broker/load/messages/sent/1min: 11.64
+|     $SYS/broker/load/bytes/received/1min: 13.68
+|     $SYS/broker/clients/expired: 0
+|     $SYS/broker/publish/messages/dropped: 0
+|     $SYS/broker/retained messages/count: 53
+|     $SYS/broker/load/connections/15min: 0.44
+|     $SYS/broker/load/bytes/sent/15min: 449.11
+|     $SYS/broker/load/bytes/received/5min: 23.06
+|     $SYS/broker/heap/maximum: 60392
+|     $SYS/broker/load/publish/dropped/1min: 0.00
+|     $SYS/broker/load/publish/received/1min: 0.00
+|     $SYS/broker/load/messages/sent/5min: 19.33
+|     $SYS/broker/shared_subscriptions/count: 0
+|     $SYS/broker/publish/bytes/sent: 1826
+|     $SYS/broker/publish/bytes/received: 0
+|     $SYS/broker/messages/stored: 53
+|     $SYS/broker/messages/received: 707
+|     $SYS/broker/load/bytes/sent/1min: 368.08
+|     $SYS/broker/load/sockets/5min: 0.74
+|     $SYS/broker/load/publish/dropped/5min: 0.00
+|     $SYS/broker/load/sockets/1min: 1.22
+|     $SYS/broker/load/publish/sent/1min: 9.65
+|     $SYS/broker/load/publish/received/15min: 0.00
+|     $SYS/broker/load/sockets/15min: 0.45
+|     $SYS/broker/bytes/received: 1920
+|     $SYS/broker/load/publish/sent/5min: 16.44
+|     $SYS/broker/heap/current: 57960
+|     $SYS/broker/clients/disconnected: 7
+|     $SYS/broker/clients/maximum: 10
+|     $SYS/broker/load/bytes/sent/5min: 634.92
+|     $SYS/broker/load/connections/1min: 0.31
+|     $SYS/broker/clients/connected: 3
+|     $SYS/broker/bytes/sent: 19806
+|     $SYS/broker/clients/inactive: 7
+|     $SYS/broker/load/connections/5min: 0.54
+|     $SYS/broker/load/messages/received/5min: 2.95
+|_    $SYS/broker/load/publish/received/5min: 0.00
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sun Nov 17 19:05:01 2024 -- 1 IP address (1 host up) scanned in 12.19 seconds
