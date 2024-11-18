@@ -1,0 +1,10 @@
+# Nmap 7.94SVN scan initiated Sun Nov 17 19:08:13 2024 as: /usr/lib/nmap/nmap -oX - -p49185 -sV -sC -sU -oN MSFtest111/results/192.168.56.4/49185/udp49185_service_scan 192.168.56.4
+Nmap scan report for 192.168.56.4
+Host is up (0.00035s latency).
+
+PORT      STATE  SERVICE VERSION
+49185/udp closed unknown
+MAC Address: 08:00:27:DD:AC:1C (Oracle VirtualBox virtual NIC)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sun Nov 17 19:08:19 2024 -- 1 IP address (1 host up) scanned in 5.55 seconds
