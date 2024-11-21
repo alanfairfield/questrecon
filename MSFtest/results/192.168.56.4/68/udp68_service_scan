@@ -1,1 +1,0 @@
-# Nmap 7.94SVN scan initiated Sun Nov 17 19:07:50 2024 as: /usr/lib/nmap/nmap -oX - -p68 -sV -sC -sU -oN MSFtest/results/192.168.56.4/68/udp68_service_scan 192.168.56.4

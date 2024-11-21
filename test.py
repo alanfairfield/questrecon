@@ -1,10 +1,12 @@
 import os
 import argparse
+import time
 import nmap
 from colorama import Fore, Back, Style
 from pathlib import Path
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed, ProcessPoolExecutor
 
+# Define a class for Scanner object 
 class Scanner:
     def __init__(self, target=None, hosts_file=None, output_dir=None):
         self.target = target
@@ -26,8 +28,9 @@ class Scanner:
 ''' + Style.RESET_ALL)
 
         print(ascii_art)
-        print(Fore.WHITE + Back.MAGENTA + Style.BRIGHT + "\nThe quieter you become, the more you can hear.\n" + Style.RESET_ALL + Style.BRIGHT + '\n...\n')
+        print(Fore.WHITE + Back.BLACK + Style.BRIGHT + "\nThe quieter you become, the more you can hear.\n" + Style.RESET_ALL + Style.BRIGHT + '\n...\n')
 
+# Create output directory according to args.out
     def create_output_dir(self):
         if not os.path.isdir(self.output_dir):
             try:
@@ -36,70 +39,80 @@ class Scanner:
             except Exception as e:
                 print(f"[-] Something went wrong with the creation of the output directory! Error: {e}")
 
+# UDP Nmap basic scan
     def udp_nmap(self, target):
         nm = nmap.PortScanner()
         try:
-            target_dir = Path(self.output_dir) / "results" / target
-            target_dir.mkdir(parents=True, exist_ok=True)
-    
+            target_dir = Path(self.output_dir) / "results" / target # Define output dir + results + target
+            target_dir.mkdir(parents=True, exist_ok=True) # Create output dir +  results + target
             print(Fore.GREEN + f"[+] Running Quick UDP scan on {target}..." + Style.RESET_ALL)
             nm.scan(target, arguments=f"-sU -F -oN {target_dir}/quick_nmap_udp")
             udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
             print(f"[+] UDP Ports open on {target}: {list(udp_ports)}")
+
             return set(udp_ports)
+        
         except Exception as e:
             print(f"[-] An error occurred during scanning: {e}")
             return set()
-
+        
+# TCP Nmap basic scan
     def tcp_nmap(self, target):
         nm = nmap.PortScanner()
         try:
-            target_dir = Path(self.output_dir) / "results" / target
-            target_dir.mkdir(parents=True, exist_ok=True)
+            target_dir = Path(self.output_dir) / "results" / target # Define output dir + results + target
+            target_dir.mkdir(parents=True, exist_ok=True) # Create output dir +  results + target
     
             print(Fore.GREEN + f"[+] Running Full TCP scan on {target} to determine which ports are open..." + Style.RESET_ALL)
             nm.scan(target, arguments=f"-p- -oN {target_dir}/quick_nmap_tcp")
             tcp_ports = nm[target]['tcp'].keys() if 'tcp' in nm[target] else []
             print(f"[+] TCP Ports open on {target}: {list(tcp_ports)}")
+
             return set(tcp_ports)
+        
         except Exception as e:
             print(f"[-] An error occurred during scanning: {e}")
             return set()
-
+        
+# TCP Service scan on tcp_ports 
     def tcp_service(self, target, port):
         nm = nmap.PortScanner()
         try:
             print(Fore.WHITE + Back.BLACK + Style.BRIGHT + f"[+] Service Scanning TCP Port {port} on target {target}" + Style.RESET_ALL)
-            target_dir = Path(self.output_dir) / "results" / target / str(port)
+            target_dir = Path(self.output_dir) / "results" / target / "tcp" / str(port)
             target_dir.mkdir(parents=True, exist_ok=True)
-            nm.scan(target, arguments=f"-p{port} -sV -sC -oN {target_dir}/tcp{port}_service_scan")
+            nm.scan(target, arguments=f"-p{port} -sV -sC -oN {target_dir}/tcp_{port}_service_scan")
             print(Fore.GREEN + f"[+] Service scan completed for TCP port {port} on {target}" + Style.RESET_ALL)
+            print(nm.csv()) # TEST STATEMENT, this reveals service name / version, denoted as 'name' and 'product' Use this for service detection / piping to searchsploit, etc.
         except Exception as e:
             print(f"[-] TCP service scan error for {target}:{port}: {e}")
 
+# UDP Service scan on udp_ports
     def udp_service(self, target, port):
         nm = nmap.PortScanner()
         try:
             print(Fore.WHITE + Back.BLACK + Style.BRIGHT + f"[+] Service Scanning UDP Port {port} on target {target}" + Style.RESET_ALL)
-            target_dir = Path(self.output_dir) / "results" / target / str(port)
+            target_dir = Path(self.output_dir) / "results" / target / "udp" / str(port)
             target_dir.mkdir(parents=True, exist_ok=True)
-            nm.scan(target, arguments=f"-p{port} -sV -sC -sU -oN {target_dir}/udp{port}_service_scan")
+            nm.scan(target, arguments=f"-p{port} -sV -sC -sU -oN {target_dir}/udp_{port}_service_scan")
             print(Fore.GREEN + f"[+] Service scan completed for UDP port {port} on {target}" + Style.RESET_ALL)
+            print(nm.csv()) # TEST STATEMENT, this reveals service name / version, denoted as 'name' and 'product' Use this for service detection / piping to searchsploit, etc.
         except Exception as e:
             print(f"[-] UDP service scan error for {target}:{port}: {e}")
 
+# Scan hosts from host files, treating host in hosts as target
     def scan_multiple_hosts(self):
         with open(self.hosts_file, 'r') as file:
             host_list = [line.strip() for line in file if line.strip()]
 
-        with ThreadPoolExecutor() as executor:
-            future_to_host = {}
+        with ProcessPoolExecutor() as executor:
+            future_to_host = {} # Empty dict to store future objects
             for host in host_list:
                 print(Fore.CYAN + f"[+] Starting scans for host: {host}" + Style.RESET_ALL)
-                future_to_host[executor.submit(self.tcp_nmap, host)] = (host, 'tcp')
-                future_to_host[executor.submit(self.udp_nmap, host)] = (host, 'udp')
+                future_to_host[executor.submit(self.tcp_nmap, host)] = (host, 'tcp') # Quick TCP
+                future_to_host[executor.submit(self.udp_nmap, host)] = (host, 'udp') # Quick UDP
 
-            for future in as_completed(future_to_host):
+            for future in as_completed(future_to_host): 
                 host, scan_type = future_to_host[future]
                 try:
                     ports = future.result()
@@ -119,9 +132,10 @@ class Scanner:
         self.create_output_dir()
 
         if self.target:
-            with ThreadPoolExecutor() as executor:
+            with ProcessPoolExecutor() as executor:
                 futures_tcp = executor.submit(self.tcp_nmap, self.target)
                 futures_udp = executor.submit(self.udp_nmap, self.target)
+                
 
                 for future in as_completed([futures_tcp, futures_udp]):
                     if future == futures_tcp:
@@ -135,7 +149,7 @@ class Scanner:
         elif self.hosts_file:
             self.scan_multiple_hosts()
         else:
-            print("[-] Please specify a target using '-t' or provide a hosts file using '-H'")
+            print("[-] Please specify a target using '-t <target>' or provide a hosts file using '-H <hostfile.txt>'")
 
 if __name__ == "__main__":
     # Arguments
@@ -151,8 +165,12 @@ if __name__ == "__main__":
     output_dir = args.out
 
     if not output_dir:
-        print("[-] Please specify an output directory using '-o'")
-        exit(1)
+        output_dir = os.getcwd()
+    if not target:
+        print(f"[+] Provide a target using -t <target> or -H <hosts.txt>")
+        
 
     scanner = Scanner(target=target, hosts_file=hosts, output_dir=output_dir)
     scanner.run()
+    
+   
