@@ -1,0 +1,10 @@
+# Nmap 7.94SVN scan initiated Wed Nov 20 19:35:54 2024 as: /usr/lib/nmap/nmap -oX - -p54234 -sV -sC -oN MSFhost_test/results/192.168.56.4/tcp/54234/tcp_54234_service_scan 192.168.56.4
+Nmap scan report for 192.168.56.4
+Host is up (0.00030s latency).
+
+PORT      STATE SERVICE VERSION
+54234/tcp open  status  1 (RPC #100024)
+MAC Address: 08:00:27:DD:AC:1C (Oracle VirtualBox virtual NIC)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Wed Nov 20 19:36:05 2024 -- 1 IP address (1 host up) scanned in 11.41 seconds
