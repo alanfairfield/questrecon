@@ -1,0 +1,2 @@
+host;hostname;hostname_type;protocol;port;name;state;product;extrainfo;reason;version;conf;cpe
+192.168.56.4;;;tcp;8787;drb;open;Ruby DRb RMI;"Ruby 1.8; path /usr/lib/ruby/1.8/drb";syn-ack;;10;cpe:/a:ruby-lang:ruby:1.8

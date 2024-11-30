@@ -1,0 +1,2 @@
+host;hostname;hostname_type;protocol;port;name;state;product;extrainfo;reason;version;conf;cpe
+192.168.56.4;;;tcp;5432;postgresql;open;PostgreSQL DB;;syn-ack;8.3.0 - 8.3.7;10;cpe:/a:postgresql:postgresql:8.3

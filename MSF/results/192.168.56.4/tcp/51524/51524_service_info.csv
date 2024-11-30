@@ -1,0 +1,2 @@
+host;hostname;hostname_type;protocol;port;name;state;product;extrainfo;reason;version;conf;cpe
+192.168.56.4;;;tcp;51524;status;open;;RPC #100024;syn-ack;1;10;

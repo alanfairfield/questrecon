@@ -53,7 +53,7 @@ class Scanner:
             return set(udp_ports)
         
         except Exception as e:
-            print(f"[-] An error occurred during scanning: {e}")
+            print(f"[-] An error occurred during basic UDP scan: {e}")
             return set()
         
 # TCP Nmap basic scan
@@ -71,7 +71,7 @@ class Scanner:
             return set(tcp_ports)
         
         except Exception as e:
-            print(f"[-] An error occurred during scanning: {e}")
+            print(f"[-] An error occurred during basic TCP scan: {e}")
             return set()
         
 # TCP Service scan on tcp_ports 
@@ -79,13 +79,25 @@ class Scanner:
         nm = nmap.PortScanner()
         try:
             print(Fore.WHITE + Back.BLACK + Style.BRIGHT + f"[+] Service Scanning TCP Port {port} on target {target}" + Style.RESET_ALL)
+
             target_dir = Path(self.output_dir) / "results" / target / "tcp" / str(port)
+            service_info_dir = target_dir / f"{port}_service_info.csv"
             target_dir.mkdir(parents=True, exist_ok=True)
+            #service_info_dir.mkdir(parents=True, exist_ok=True)
+
             nm.scan(target, arguments=f"-p{port} -sV -sC -oN {target_dir}/tcp_{port}_service_scan")
             print(Fore.GREEN + f"[+] Service scan completed for TCP port {port} on {target}" + Style.RESET_ALL)
-            print(nm.csv()) # TEST STATEMENT, this reveals service name / version, denoted as 'name' and 'product' Use this for service detection / piping to searchsploit, etc.
+            #print(nm.csv()) # TEST STATEMENT, this reveals service name / version, denoted as 'name' and 'product' Use this for service detection / piping to searchsploit, etc.
+            
+            with open(service_info_dir, 'w') as csv_file:
+                service_output = nm.csv()
+                csv_file.write(service_output)
+                print(f"File written: {service_info_dir}")
+
         except Exception as e:
             print(f"[-] TCP service scan error for {target}:{port}: {e}")
+        print(f"TCP Service Output:\n {service_output}") # Test Statement
+
 
 # UDP Service scan on udp_ports
     def udp_service(self, target, port):
@@ -96,9 +108,11 @@ class Scanner:
             target_dir.mkdir(parents=True, exist_ok=True)
             nm.scan(target, arguments=f"-p{port} -sV -sC -sU -oN {target_dir}/udp_{port}_service_scan")
             print(Fore.GREEN + f"[+] Service scan completed for UDP port {port} on {target}" + Style.RESET_ALL)
-            print(nm.csv()) # TEST STATEMENT, this reveals service name / version, denoted as 'name' and 'product' Use this for service detection / piping to searchsploit, etc.
+            #print(nm.csv()) # TEST STATEMENT, this reveals service name / version, denoted as 'name' and 'product' Use this for service detection / piping to searchsploit, etc.
         except Exception as e:
             print(f"[-] UDP service scan error for {target}:{port}: {e}")
+        service_output = nm.csv()
+        print(f"UDP Service Output:\n {service_output}") # Test Statement
 
 # Scan hosts from host files, treating host in hosts as target
     def scan_multiple_hosts(self):
@@ -151,6 +165,7 @@ class Scanner:
         else:
             print("[-] Please specify a target using '-t <target>' or provide a hosts file using '-H <hostfile.txt>'")
 
+
 if __name__ == "__main__":
     # Arguments
     parser = argparse.ArgumentParser()
@@ -168,9 +183,9 @@ if __name__ == "__main__":
         output_dir = os.getcwd()
     if not target:
         print(f"[+] Provide a target using -t <target> or -H <hosts.txt>")
-        
 
     scanner = Scanner(target=target, hosts_file=hosts, output_dir=output_dir)
     scanner.run()
+ 
     
    
