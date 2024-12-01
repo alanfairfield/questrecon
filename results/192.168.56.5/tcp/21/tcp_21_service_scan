@@ -1,10 +1,9 @@
-# Nmap 7.94SVN scan initiated Sat Nov 30 20:25:23 2024 as: /usr/lib/nmap/nmap -oX - -p21 -sV -sC -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/tcp/21/tcp_21_service_scan 192.168.56.5
+# Nmap 7.94SVN scan initiated Sat Nov 30 21:09:34 2024 as: /usr/lib/nmap/nmap -oX - -p21 -sV -sC -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/tcp/21/tcp_21_service_scan 192.168.56.5
 Nmap scan report for 192.168.56.5
-Host is up (0.00042s latency).
+Host is up (0.00021s latency).
 
 PORT   STATE SERVICE VERSION
 21/tcp open  ftp     vsftpd 2.3.4
-|_ftp-anon: Anonymous FTP login allowed (FTP code 230)
 | ftp-syst: 
 |   STAT: 
 | FTP server status:
@@ -17,8 +16,9 @@ PORT   STATE SERVICE VERSION
 |      Data connections will be plain text
 |      vsFTPd 2.3.4 - secure, fast, stable
 |_End of status
+|_ftp-anon: Anonymous FTP login allowed (FTP code 230)
 MAC Address: 08:00:27:5C:2E:55 (Oracle VirtualBox virtual NIC)
 Service Info: OS: Unix
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Sat Nov 30 20:25:29 2024 -- 1 IP address (1 host up) scanned in 5.68 seconds
+# Nmap done at Sat Nov 30 21:09:40 2024 -- 1 IP address (1 host up) scanned in 5.64 seconds

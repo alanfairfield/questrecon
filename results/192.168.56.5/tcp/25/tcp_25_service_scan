@@ -1,28 +1,28 @@
-# Nmap 7.94SVN scan initiated Sat Nov 30 20:25:23 2024 as: /usr/lib/nmap/nmap -oX - -p25 -sV -sC -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/tcp/25/tcp_25_service_scan 192.168.56.5
+# Nmap 7.94SVN scan initiated Sat Nov 30 21:09:34 2024 as: /usr/lib/nmap/nmap -oX - -p25 -sV -sC -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/tcp/25/tcp_25_service_scan 192.168.56.5
 Nmap scan report for 192.168.56.5
-Host is up (0.00018s latency).
+Host is up (0.00015s latency).
 
 PORT   STATE SERVICE VERSION
 25/tcp open  smtp    Postfix smtpd
-| ssl-cert: Subject: commonName=ubuntu804-base.localdomain/organizationName=OCOSA/stateOrProvinceName=There is no such thing outside US/countryName=XX
-| Not valid before: 2010-03-17T14:07:45
-|_Not valid after:  2010-04-16T14:07:45
-|_ssl-date: 2024-12-01T01:25:27+00:00; -2s from scanner time.
+|_smtp-commands: metasploitable.localdomain, PIPELINING, SIZE 10240000, VRFY, ETRN, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, DSN
+|_ssl-date: 2024-12-01T02:09:37+00:00; -3s from scanner time.
 | sslv2: 
 |   SSLv2 supported
 |   ciphers: 
+|     SSL2_RC4_128_EXPORT40_WITH_MD5
+|     SSL2_RC4_128_WITH_MD5
 |     SSL2_RC2_128_CBC_WITH_MD5
 |     SSL2_RC2_128_CBC_EXPORT40_WITH_MD5
-|     SSL2_RC4_128_WITH_MD5
-|     SSL2_RC4_128_EXPORT40_WITH_MD5
-|     SSL2_DES_192_EDE3_CBC_WITH_MD5
-|_    SSL2_DES_64_CBC_WITH_MD5
-|_smtp-commands: metasploitable.localdomain, PIPELINING, SIZE 10240000, VRFY, ETRN, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, DSN
+|     SSL2_DES_64_CBC_WITH_MD5
+|_    SSL2_DES_192_EDE3_CBC_WITH_MD5
+| ssl-cert: Subject: commonName=ubuntu804-base.localdomain/organizationName=OCOSA/stateOrProvinceName=There is no such thing outside US/countryName=XX
+| Not valid before: 2010-03-17T14:07:45
+|_Not valid after:  2010-04-16T14:07:45
 MAC Address: 08:00:27:5C:2E:55 (Oracle VirtualBox virtual NIC)
 Service Info: Host:  metasploitable.localdomain
 
 Host script results:
-|_clock-skew: -2s
+|_clock-skew: -3s
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Sat Nov 30 20:25:29 2024 -- 1 IP address (1 host up) scanned in 5.82 seconds
+# Nmap done at Sat Nov 30 21:09:40 2024 -- 1 IP address (1 host up) scanned in 5.65 seconds

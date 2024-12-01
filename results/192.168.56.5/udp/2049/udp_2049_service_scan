@@ -1,0 +1,10 @@
+# Nmap 7.94SVN scan initiated Sat Nov 30 21:10:24 2024 as: /usr/lib/nmap/nmap -oX - -p2049 -sV -sC -sU -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/udp/2049/udp_2049_service_scan 192.168.56.5
+Nmap scan report for 192.168.56.5
+Host is up (0.00031s latency).
+
+PORT     STATE SERVICE VERSION
+2049/udp open  nfs     2-4 (RPC #100003)
+MAC Address: 08:00:27:5C:2E:55 (Oracle VirtualBox virtual NIC)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sat Nov 30 21:10:34 2024 -- 1 IP address (1 host up) scanned in 10.50 seconds

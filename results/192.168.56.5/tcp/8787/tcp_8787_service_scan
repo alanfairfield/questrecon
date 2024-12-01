@@ -1,10 +1,10 @@
-# Nmap 7.94SVN scan initiated Sat Nov 30 20:25:40 2024 as: /usr/lib/nmap/nmap -oX - -p8787 -sV -sC -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/tcp/8787/tcp_8787_service_scan 192.168.56.5
+# Nmap 7.94SVN scan initiated Sat Nov 30 21:09:51 2024 as: /usr/lib/nmap/nmap -oX - -p8787 -sV -sC -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/tcp/8787/tcp_8787_service_scan 192.168.56.5
 Nmap scan report for 192.168.56.5
-Host is up (0.00074s latency).
+Host is up (0.00031s latency).
 
 PORT     STATE SERVICE VERSION
 8787/tcp open  drb     Ruby DRb RMI (Ruby 1.8; path /usr/lib/ruby/1.8/drb)
 MAC Address: 08:00:27:5C:2E:55 (Oracle VirtualBox virtual NIC)
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Sat Nov 30 20:25:52 2024 -- 1 IP address (1 host up) scanned in 11.50 seconds
+# Nmap done at Sat Nov 30 21:10:03 2024 -- 1 IP address (1 host up) scanned in 11.43 seconds

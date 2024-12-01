@@ -187,7 +187,7 @@ class ServiceEnum:
 
     def find_csv_files(self, output_dir):
         csv_files = []
-        for root, dirs, files in os.walk(output_dir):
+        for root, files in os.walk(output_dir):
             for file in files:
                 if file.endswith("_service_info.csv"):
                     csv_files.append(os.path.join(root, file))
