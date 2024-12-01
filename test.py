@@ -7,6 +7,9 @@ import nmap
 from colorama import Fore, Back, Style
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed, ProcessPoolExecutor
+from watchdog.observers import Observer
+from watchdog.events import LoggingEventHandler
+from watchdog.events import FileSystemEventHandler
 from modules import smb
 
 smb.test() # module import test
@@ -181,21 +184,48 @@ class Scanner:
 # csv files contain services that are part of standard pentest enumeration
 
 class ServiceEnum:
+    def __init__(self, output_dir):
+        self.output_dir = output_dir  # Directory to scan for CSV files
 
-    def __init__(self, output_dir=None):
-        self.output_dir = output_dir
+    def handle_service_enumeration(self, host, protocol, port, service_name, product):
+        print(f"Service found: {host}:{port} ({protocol}) - {service_name} ({product})")
+        # Add logic for specific service actions based on port/protocol/etc.
 
-    def find_csv_files(self, output_dir):
-        csv_files = []
-        for root, files in os.walk(output_dir):
-            for file in files:
-                if file.endswith("_service_info.csv"):
-                    csv_files.append(os.path.join(root, file))
-        return csv_files
-    
-    def run(self, csv_files=None):
-        print(csv_files)
+    def process_csv(self, file_path):
+        try:
+            df = pd.read_csv(file_path)
+            if {'host', 'protocol', 'port', 'name', 'product'}.issubset(df.columns):
+                for _, row in df.iterrows():
+                    host = row['host']
+                    protocol = row['protocol']
+                    port = row['port']
+                    service_name = row['name']
+                    product = row['product']
 
+                    # Check for specific conditions 
+                    if protocol == 'tcp' and 'http' in service_name: # TODO: and 'http' in name
+                        self.handle_service_enumeration(host, protocol, port, service_name, product)
+                    elif protocol == 'tcp' and port == 443:
+                        self.handle_service_enumeration(host, protocol, port, service_name, product)
+                    # Add more conditions as needed
+            else:
+                print(f"Skipping {file_path}: Missing necessary columns.")
+        except Exception as e:
+            print(f"Error processing file {file_path}: {e}")
+
+    def process_files_in_directory(self):
+        # Iterate through directories and find CSV files
+        csv_files = [os.path.join(root, file) 
+                     for root, _, files in os.walk(self.output_dir) 
+                     for file in files if file.endswith('.csv')]
+
+        # Use ThreadPoolExecutor to process the files concurrently
+        with ThreadPoolExecutor() as executor:
+            futures = [executor.submit(self.process_csv, file) for file in csv_files]
+
+            # Wait for all futures to complete
+            for future in futures:
+                future.result()
 
 if __name__ == "__main__":
     # Arguments
@@ -208,17 +238,16 @@ if __name__ == "__main__":
     # Variables from arguments
     target = args.target
     hosts = args.hosts
-    output_dir = args.out
+    output_dir = args.out or os.getcwd()
 
-    if not output_dir:
-        output_dir = os.getcwd()
     if not target:
         print(f"[+] Provide a target using -t <target> or -H <hosts.txt>")
-
+        
+    # Run the scanner
     scanner = Scanner(target=target, hosts_file=hosts, output_dir=output_dir)
     scanner.run()
 
-
-    service_enum = ServiceEnum(output_dir=output_dir)
-    service_enum.run()
+    # Instantiate ServiceEnum
+    service_enum = ServiceEnum(output_dir)
+    service_enum.process_files_in_directory()
     

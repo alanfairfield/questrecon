@@ -1,6 +1,6 @@
-# Nmap 7.94SVN scan initiated Sat Nov 30 21:09:34 2024 as: /usr/lib/nmap/nmap -oX - -p5900 -sV -sC -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/tcp/5900/tcp_5900_service_scan 192.168.56.5
+# Nmap 7.94SVN scan initiated Sat Nov 30 22:57:48 2024 as: /usr/lib/nmap/nmap -oX - -p5900 -sV -sC -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/tcp/5900/tcp_5900_service_scan 192.168.56.5
 Nmap scan report for 192.168.56.5
-Host is up (0.00019s latency).
+Host is up (0.00011s latency).
 
 PORT     STATE SERVICE VERSION
 5900/tcp open  vnc     VNC (protocol 3.3)
@@ -11,4 +11,4 @@ PORT     STATE SERVICE VERSION
 MAC Address: 08:00:27:5C:2E:55 (Oracle VirtualBox virtual NIC)
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Sat Nov 30 21:09:40 2024 -- 1 IP address (1 host up) scanned in 5.56 seconds
+# Nmap done at Sat Nov 30 22:57:53 2024 -- 1 IP address (1 host up) scanned in 5.85 seconds

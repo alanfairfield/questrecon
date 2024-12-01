@@ -1,6 +1,6 @@
-# Nmap 7.94SVN scan initiated Sat Nov 30 21:10:24 2024 as: /usr/lib/nmap/nmap -oX - -p53 -sV -sC -sU -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/udp/53/udp_53_service_scan 192.168.56.5
+# Nmap 7.94SVN scan initiated Sat Nov 30 22:58:39 2024 as: /usr/lib/nmap/nmap -oX - -p53 -sV -sC -sU -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/udp/53/udp_53_service_scan 192.168.56.5
 Nmap scan report for 192.168.56.5
-Host is up (0.00040s latency).
+Host is up (0.00035s latency).
 
 PORT   STATE SERVICE VERSION
 53/udp open  domain  ISC BIND 9.4.2
@@ -10,4 +10,4 @@ PORT   STATE SERVICE VERSION
 MAC Address: 08:00:27:5C:2E:55 (Oracle VirtualBox virtual NIC)
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Sat Nov 30 21:10:29 2024 -- 1 IP address (1 host up) scanned in 5.47 seconds
+# Nmap done at Sat Nov 30 22:58:44 2024 -- 1 IP address (1 host up) scanned in 5.48 seconds

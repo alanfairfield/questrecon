@@ -1,6 +1,6 @@
-# Nmap 7.94SVN scan initiated Sat Nov 30 21:09:32 2024 as: /usr/lib/nmap/nmap -oX - -p- -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/quick_nmap_tcp 192.168.56.5
+# Nmap 7.94SVN scan initiated Sat Nov 30 22:57:45 2024 as: /usr/lib/nmap/nmap -oX - -p- -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/quick_nmap_tcp 192.168.56.5
 Nmap scan report for 192.168.56.5
-Host is up (0.00034s latency).
+Host is up (0.00038s latency).
 Not shown: 65505 closed tcp ports (reset)
 PORT      STATE SERVICE
 21/tcp    open  ftp
@@ -35,4 +35,4 @@ PORT      STATE SERVICE
 58564/tcp open  unknown
 MAC Address: 08:00:27:5C:2E:55 (Oracle VirtualBox virtual NIC)
 
-# Nmap done at Sat Nov 30 21:09:34 2024 -- 1 IP address (1 host up) scanned in 2.07 seconds
+# Nmap done at Sat Nov 30 22:57:47 2024 -- 1 IP address (1 host up) scanned in 2.01 seconds

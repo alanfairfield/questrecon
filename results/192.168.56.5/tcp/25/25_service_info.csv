@@ -1,2 +1,3 @@
 host,protocol,port,name,product
 192.168.56.5,tcp,25,smtp,Postfix smtpd
+192.168.56.5,tcp,25,smtp,Postfix smtpd
