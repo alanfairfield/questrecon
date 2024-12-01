@@ -1,3 +1,0 @@
-host,protocol,port,name,product
-192.168.56.5,tcp,5900,vnc,VNC
-192.168.56.5,tcp,5900,vnc,VNC
