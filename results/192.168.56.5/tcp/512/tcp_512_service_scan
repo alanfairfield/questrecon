@@ -1,0 +1,11 @@
+# Nmap 7.94SVN scan initiated Sat Nov 30 20:25:23 2024 as: /usr/lib/nmap/nmap -oX - -p512 -sV -sC -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/tcp/512/tcp_512_service_scan 192.168.56.5
+Nmap scan report for 192.168.56.5
+Host is up (0.00039s latency).
+
+PORT    STATE SERVICE VERSION
+512/tcp open  exec    netkit-rsh rexecd
+MAC Address: 08:00:27:5C:2E:55 (Oracle VirtualBox virtual NIC)
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sat Nov 30 20:25:29 2024 -- 1 IP address (1 host up) scanned in 5.54 seconds

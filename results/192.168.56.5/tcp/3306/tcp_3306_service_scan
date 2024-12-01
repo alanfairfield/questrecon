@@ -1,0 +1,18 @@
+# Nmap 7.94SVN scan initiated Sat Nov 30 20:25:40 2024 as: /usr/lib/nmap/nmap -oX - -p3306 -sV -sC -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/tcp/3306/tcp_3306_service_scan 192.168.56.5
+Nmap scan report for 192.168.56.5
+Host is up (0.00021s latency).
+
+PORT     STATE SERVICE VERSION
+3306/tcp open  mysql   MySQL 5.0.51a-3ubuntu5
+| mysql-info: 
+|   Protocol: 10
+|   Version: 5.0.51a-3ubuntu5
+|   Thread ID: 8
+|   Capabilities flags: 43564
+|   Some Capabilities: LongColumnFlag, Support41Auth, Speaks41ProtocolNew, ConnectWithDatabase, SwitchToSSLAfterHandshake, SupportsTransactions, SupportsCompression
+|   Status: Autocommit
+|_  Salt: !2w#BcL1Q%b>PXH@G#wP
+MAC Address: 08:00:27:5C:2E:55 (Oracle VirtualBox virtual NIC)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sat Nov 30 20:25:41 2024 -- 1 IP address (1 host up) scanned in 0.42 seconds

@@ -1,10 +1,15 @@
 import os
 import argparse
 import time
+import csv
+import pandas as pd
 import nmap
 from colorama import Fore, Back, Style
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed, ProcessPoolExecutor
+from modules import smb
+
+smb.test() # module import test
 
 # Define a class for Scanner object 
 class Scanner:
@@ -14,7 +19,7 @@ class Scanner:
         self.output_dir = output_dir
 
     def print_ascii_art(self):
-        ascii_art = (Fore.YELLOW + Back.RED + Style.BRIGHT + r'''
+        ascii_art = (Fore.WHITE + Back.BLACK + Style.BRIGHT + r'''
 +~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-+                                                                   
 |     (                           )   )\ )                               |
 |   ( )\      (      (         ( /(  (()/(     (                         |
@@ -28,7 +33,7 @@ class Scanner:
 ''' + Style.RESET_ALL)
 
         print(ascii_art)
-        print(Fore.WHITE + Back.BLACK + Style.BRIGHT + "\nThe quieter you become, the more you can hear.\n" + Style.RESET_ALL + Style.BRIGHT + '\n...\n')
+        print(Fore.WHITE + Back.BLACK + Style.BRIGHT + "The quieter you become, the more you can hear.\n" + Style.RESET_ALL + Style.BRIGHT + '\n...\n')
 
 # Create output directory according to args.out
     def create_output_dir(self):
@@ -83,20 +88,32 @@ class Scanner:
             target_dir = Path(self.output_dir) / "results" / target / "tcp" / str(port)
             service_info_dir = target_dir / f"{port}_service_info.csv"
             target_dir.mkdir(parents=True, exist_ok=True)
-            #service_info_dir.mkdir(parents=True, exist_ok=True)
 
             nm.scan(target, arguments=f"-p{port} -sV -sC -oN {target_dir}/tcp_{port}_service_scan")
             print(Fore.GREEN + f"[+] Service scan completed for TCP port {port} on {target}" + Style.RESET_ALL)
-            #print(nm.csv()) # TEST STATEMENT, this reveals service name / version, denoted as 'name' and 'product' Use this for service detection / piping to searchsploit, etc.
-            
-            with open(service_info_dir, 'w') as csv_file:
-                service_output = nm.csv()
-                csv_file.write(service_output)
-                print(f"File written: {service_info_dir}")
+
+            # Get service information
+            host_info = nm[target]  # Info about the target
+        
+            # Extract 'name' and 'product' for the given port
+            product = host_info.get('tcp', {}).get(port, {}).get('product', 'Unknown')
+            service_name = host_info.get('tcp', {}).get(port, {}).get('name', 'Unknown')
+
+            # Write the CSV header only once
+            if not service_info_dir.exists():
+                with open(service_info_dir, 'w', newline='') as csv_file:
+                    writer = csv.writer(csv_file)
+                    writer.writerow(['host', 'protocol', 'port', 'name', 'product'])
+
+            # Append the relevant information to the CSV
+            with open(service_info_dir, 'a', newline='') as csv_file:
+                writer = csv.writer(csv_file)
+                writer.writerow([target, 'tcp', port, service_name, product])
 
         except Exception as e:
             print(f"[-] TCP service scan error for {target}:{port}: {e}")
-        print(f"TCP Service Output:\n {service_output}") # Test Statement
+
+ 
 
 
 # UDP Service scan on udp_ports
@@ -106,57 +123,50 @@ class Scanner:
             print(Fore.WHITE + Back.BLACK + Style.BRIGHT + f"[+] Service Scanning UDP Port {port} on target {target}" + Style.RESET_ALL)
             target_dir = Path(self.output_dir) / "results" / target / "udp" / str(port)
             target_dir.mkdir(parents=True, exist_ok=True)
+            service_info_dir = target_dir / f"{port}_service_info.csv"
+        
             nm.scan(target, arguments=f"-p{port} -sV -sC -sU -oN {target_dir}/udp_{port}_service_scan")
             print(Fore.GREEN + f"[+] Service scan completed for UDP port {port} on {target}" + Style.RESET_ALL)
-            #print(nm.csv()) # TEST STATEMENT, this reveals service name / version, denoted as 'name' and 'product' Use this for service detection / piping to searchsploit, etc.
+
+            # Get service information
+            host_info = nm[target]
+        
+            # Extract 'name' and 'product' for the given port
+            product = host_info.get('udp', {}).get(port, {}).get('product', 'Unknown')
+            service_name = host_info.get('udp', {}).get(port, {}).get('name', 'Unknown')
+
+            # Write the CSV header only once
+            if not service_info_dir.exists():
+                with open(service_info_dir, 'w', newline='') as csv_file:
+                    writer = csv.writer(csv_file)
+                    writer.writerow(['host', 'protocol', 'port', 'name', 'product'])
+
+            # Append the relevant information to the CSV
+            with open(service_info_dir, 'a', newline='') as csv_file:
+                writer = csv.writer(csv_file)
+                writer.writerow([target, 'udp', port, service_name, product])
+
         except Exception as e:
             print(f"[-] UDP service scan error for {target}:{port}: {e}")
-        service_output = nm.csv()
-        print(f"UDP Service Output:\n {service_output}") # Test Statement
 
-# Scan hosts from host files, treating host in hosts as target
-    def scan_multiple_hosts(self):
-        with open(self.hosts_file, 'r') as file:
-            host_list = [line.strip() for line in file if line.strip()]
 
-        with ProcessPoolExecutor() as executor:
-            future_to_host = {} # Empty dict to store future objects
-            for host in host_list:
-                print(Fore.CYAN + f"[+] Starting scans for host: {host}" + Style.RESET_ALL)
-                future_to_host[executor.submit(self.tcp_nmap, host)] = (host, 'tcp') # Quick TCP
-                future_to_host[executor.submit(self.udp_nmap, host)] = (host, 'udp') # Quick UDP
-
-            for future in as_completed(future_to_host): 
-                host, scan_type = future_to_host[future]
-                try:
-                    ports = future.result()
-                    if scan_type == 'tcp':
-                        print(Fore.GREEN + f"[+] TCP Ports open on {host}: {list(ports)}" + Style.RESET_ALL)
-                        for port in ports:
-                            executor.submit(self.tcp_service, host, port)
-                    elif scan_type == 'udp':
-                        print(Fore.GREEN + f"[+] UDP Ports open on {host}: {list(ports)}" + Style.RESET_ALL)
-                        for port in ports:
-                            executor.submit(self.udp_service, host, port)
-                except Exception as e:
-                    print(f"[-] Error processing {scan_type.upper()} scan for {host}: {e}")
 
     def run(self):
         self.print_ascii_art()
         self.create_output_dir()
 
         if self.target:
-            with ProcessPoolExecutor() as executor:
-                futures_tcp = executor.submit(self.tcp_nmap, self.target)
-                futures_udp = executor.submit(self.udp_nmap, self.target)
-                
+            with ThreadPoolExecutor() as executor:
+                futures = []
+                futures.append(executor.submit(self.tcp_nmap, self.target))
+                futures.append(executor.submit(self.udp_nmap, self.target))
 
-                for future in as_completed([futures_tcp, futures_udp]):
-                    if future == futures_tcp:
+                for future in as_completed(futures):
+                    if future == futures[0]:
                         tcp_ports = future.result()
                         for port in tcp_ports:
                             executor.submit(self.tcp_service, self.target, port)
-                    elif future == futures_udp:
+                    elif future == futures[1]:
                         udp_ports = future.result()
                         for port in udp_ports:
                             executor.submit(self.udp_service, self.target, port)
@@ -164,6 +174,27 @@ class Scanner:
             self.scan_multiple_hosts()
         else:
             print("[-] Please specify a target using '-t <target>' or provide a hosts file using '-H <hostfile.txt>'")
+
+
+# Concept: ServiceEnum does not need to use target or hosts file. By the time service scans are needed, target(s) scans are already completed and/or in-process.
+# This class should act on the output file structure, using watchdog to monitor for csv files, and initiate service scans as new csv files appear, only if the 
+# csv files contain services that are part of standard pentest enumeration
+
+class ServiceEnum:
+
+    def __init__(self, output_dir=None):
+        self.output_dir = output_dir
+
+    def find_csv_files(self, output_dir):
+        csv_files = []
+        for root, dirs, files in os.walk(output_dir):
+            for file in files:
+                if file.endswith("_service_info.csv"):
+                    csv_files.append(os.path.join(root, file))
+        return csv_files
+    
+    def run(self, csv_files=None):
+        print(csv_files)
 
 
 if __name__ == "__main__":
@@ -186,6 +217,8 @@ if __name__ == "__main__":
 
     scanner = Scanner(target=target, hosts_file=hosts, output_dir=output_dir)
     scanner.run()
- 
+
+
+    service_enum = ServiceEnum(output_dir=output_dir)
+    service_enum.run()
     
-   

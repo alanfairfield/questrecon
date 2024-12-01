@@ -1,2 +1,0 @@
-host;hostname;hostname_type;protocol;port;name;state;product;extrainfo;reason;version;conf;cpe
-192.168.56.4;;;tcp;80;http;open;Apache httpd;(Ubuntu) DAV/2;syn-ack;2.2.8;10;cpe:/a:apache:http_server:2.2.8

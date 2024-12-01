@@ -1,2 +1,0 @@
-host;hostname;hostname_type;protocol;port;name;state;product;extrainfo;reason;version;conf;cpe
-192.168.56.4;;;tcp;21;ftp;open;vsftpd;;syn-ack;2.3.4;10;cpe:/a:vsftpd:vsftpd:2.3.4

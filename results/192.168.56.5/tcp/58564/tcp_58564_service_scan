@@ -1,0 +1,10 @@
+# Nmap 7.94SVN scan initiated Sat Nov 30 20:25:31 2024 as: /usr/lib/nmap/nmap -oX - -p58564 -sV -sC -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/tcp/58564/tcp_58564_service_scan 192.168.56.5
+Nmap scan report for 192.168.56.5
+Host is up (0.00024s latency).
+
+PORT      STATE SERVICE  VERSION
+58564/tcp open  nlockmgr 1-4 (RPC #100021)
+MAC Address: 08:00:27:5C:2E:55 (Oracle VirtualBox virtual NIC)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sat Nov 30 20:25:42 2024 -- 1 IP address (1 host up) scanned in 11.40 seconds
