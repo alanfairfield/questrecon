@@ -7,7 +7,6 @@ import nmap
 from colorama import Fore, Back, Style
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import threading
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
