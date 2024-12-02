@@ -1,0 +1,2 @@
+host,protocol,port,name,product
+127.0.0.1,tcp,1883,mosquitto version 2.0.20,

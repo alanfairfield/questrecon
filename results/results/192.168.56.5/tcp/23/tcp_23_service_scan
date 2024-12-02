@@ -1,0 +1,11 @@
+# Nmap 7.94SVN scan initiated Sun Dec  1 22:20:44 2024 as: /usr/lib/nmap/nmap -oX - -p23 -sV -sC -oN results/results/192.168.56.5/tcp/23/tcp_23_service_scan 192.168.56.5
+Nmap scan report for 192.168.56.5
+Host is up (0.00011s latency).
+
+PORT   STATE SERVICE VERSION
+23/tcp open  telnet  Linux telnetd
+MAC Address: 08:00:27:5C:2E:55 (Oracle VirtualBox virtual NIC)
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sun Dec  1 22:20:52 2024 -- 1 IP address (1 host up) scanned in 7.54 seconds

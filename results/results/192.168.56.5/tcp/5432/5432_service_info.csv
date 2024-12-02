@@ -1,0 +1,2 @@
+host,protocol,port,name,product
+192.168.56.5,tcp,5432,postgresql,PostgreSQL DB

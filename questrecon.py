@@ -102,13 +102,14 @@ class Scanner:
 # UDP Service scan on udp_ports
     def udp_service(self, target, port):
         nm = nmap.PortScanner()
+        
         try:
             print(Fore.WHITE + Back.BLACK + Style.BRIGHT + f"[+] Service Scanning UDP Port {port} on target {target}" + Style.RESET_ALL)
             target_dir = Path(self.output_dir) / "results" / target / "udp" / str(port)
             target_dir.mkdir(parents=True, exist_ok=True)
             nm.scan(target, arguments=f"-p{port} -sV -sC -sU -oN {target_dir}/udp_{port}_service_scan")
             print(Fore.GREEN + f"[+] Service scan completed for UDP port {port} on {target}" + Style.RESET_ALL)
-            #print(nm.csv()) # TEST STATEMENT, this reveals service name / version, denoted as 'name' and 'product' Use this for service detection / piping to searchsploit, etc.
+
         except Exception as e:
             print(f"[-] UDP service scan error for {target}:{port}: {e}")
         service_output = nm.csv()
@@ -146,6 +147,7 @@ class Scanner:
         self.create_output_dir()
 
         if self.target:
+
             with ProcessPoolExecutor() as executor:
                 futures_tcp = executor.submit(self.tcp_nmap, self.target)
                 futures_udp = executor.submit(self.udp_nmap, self.target)
@@ -160,6 +162,7 @@ class Scanner:
                         udp_ports = future.result()
                         for port in udp_ports:
                             executor.submit(self.udp_service, self.target, port)
+
         elif self.hosts_file:
             self.scan_multiple_hosts()
         else:

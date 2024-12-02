@@ -1,0 +1,11 @@
+# Nmap 7.94SVN scan initiated Sun Dec  1 22:20:44 2024 as: /usr/lib/nmap/nmap -oX - -p6667 -sV -sC -oN results/results/192.168.56.5/tcp/6667/tcp_6667_service_scan 192.168.56.5
+Nmap scan report for 192.168.56.5
+Host is up (0.00056s latency).
+
+PORT     STATE SERVICE VERSION
+6667/tcp open  irc     UnrealIRCd
+MAC Address: 08:00:27:5C:2E:55 (Oracle VirtualBox virtual NIC)
+Service Info: Host: irc.Metasploitable.LAN
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sun Dec  1 22:20:53 2024 -- 1 IP address (1 host up) scanned in 9.52 seconds
