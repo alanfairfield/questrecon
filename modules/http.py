@@ -9,7 +9,8 @@ def curl():
 
 def run_nikto(host, protocol, port, output_dir):
     print(f"Running nikto scan against {host}:{port}")
-    subprocess.run(["nikto", "-h", f"{host}", "-o", f"{output_dir}/{host}/{protocol}/{port}/nikto.txt"])
+    subprocess.run([f"nikto -h {host} -o {output_dir}/results/{host}/{protocol}/{port}/nikto.txt"], shell=True)
+
 
 def feroxbuster():
     t
@@ -18,5 +19,5 @@ def searchsploit():
     t
 
 
+#TODO: Quiet output of nikto
 
-'''subprocess.run([f"nikto -h {host} -o {output_dir}/{host}/{protocol}/{port}/nikto.out"])'''
