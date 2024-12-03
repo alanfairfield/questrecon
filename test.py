@@ -1,5 +1,6 @@
 import os
 import argparse
+import sys
 import time
 import csv
 import pandas as pd
@@ -13,7 +14,7 @@ from watchdog.events import FileSystemEventHandler
 
 # SMB module test
 import modules.smb
-from modules.http import run_nikto
+from modules.http import run_nikto, run_feroxbuster
 modules.smb.test()  # Module import test
 
 # Define a class for Scanner object 
@@ -190,7 +191,7 @@ class ServiceEnum:
         self.output_dir = output_dir
 
     def handle_service_enumeration(self, host, protocol, port, service_name, product):
-        print(f"Service found: {host}:{port} ({protocol}) - {service_name} ({product})")
+        print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+] Service Detected: {host}:{port} ({protocol}) - {service_name} ({product})" + Style.RESET_ALL)
 
     def process_csv(self, file_path):
         retries = 3 # increase if low bandwidth testing multiplies instance of errors
@@ -214,9 +215,11 @@ class ServiceEnum:
                         port = row['port']
                         service_name = row['name']
                         product = row['product']
+                        # Service Enum Logic
                         if protocol == 'tcp' and 'http' in service_name:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
                             run_nikto(host, protocol, port, output_dir)
+                            run_feroxbuster(host, protocol, port, output_dir, wordlist)
                 else:
                     print(f"Skipping {file_path}: Missing necessary columns.")
                 break  # Exit retry loop if successful
@@ -257,13 +260,16 @@ if __name__ == "__main__":
     parser.add_argument('-t', '--target', help='Specify the target IP address, CIDR range, or hostname')
     parser.add_argument('-H', '--hosts', help='Specify the path to a file containing host(s) separated by one or more spaces, tabs, or newlines')
     parser.add_argument('-o', '--out', help='Specify the directory name path to output the results. E.g., ~/Pentests/Client1 ... If no argument is provided, ~/results will be created to store output')
+    parser.add_argument('-w', '--wordlist', help='Specify the path to a wordlist containing directory-names for web enumeration. If no argument is provided, /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt from default kali linux will be used')
+   
     args = parser.parse_args()
 
     # Variables from arguments
     target = args.target
     hosts = args.hosts
-    output_dir = args.out or Path.cwd() 
-    
+    output_dir = args.out or Path.cwd()
+    wordlist = args.wordlist or Path  ("/usr") / ("share") / ("seclists") / ("seclists") / ("Discovery") / ("Web-Content") / ("directory-list-2.3-medium.txt")
+    print(wordlist)
 
 
     if not target:
@@ -283,3 +289,8 @@ if __name__ == "__main__":
         # Wait for both tasks to complete
         for future in futures:
             future.result()
+            #test- does this interfere with extensive scanning?
+            if future == len[futures]:
+                print("Scan Complete!")
+                sys.exit(0)
+                
