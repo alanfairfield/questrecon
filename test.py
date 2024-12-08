@@ -7,13 +7,12 @@ import nmap
 from colorama import Fore, Back, Style
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed
-import threading
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 # SMB module test
 import modules.smb
-from modules.http import run_nikto, run_feroxbuster, curl, searchsploit
+from modules.http import run_nikto, run_feroxbuster, curl, searchsploit, all_http
 modules.smb.test()  # Module import test
 
 # Define a class for Scanner object 
@@ -220,19 +219,11 @@ class ServiceEnum:
                         # Service Enum Logic - is Feroxbuster holding up the interpreter? use futures.result() logic (found at bottom). Keyboard interrupt makes program continue
                         if protocol == 'tcp' and 'http' in service_name:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
-
-                            with ThreadPoolExecutor() as executor:
-                                futures = [
-
-                                executor.submit(run_feroxbuster, host, protocol, port, output_dir, wordlist)
-                                
-                                ]
-                                for future in futures:
-                                    future.result()
-
-                            curl(host, protocol, port, output_dir)
-                            searchsploit(host, protocol, port, output_dir, wordlist)
-                            run_nikto(host, protocol, port, output_dir)
+                            all_http(host, protocol, port, output_dir, wordlist, product)
+                            #run_feroxbuster(host, protocol, port, output_dir, wordlist)
+                               
+                            #curl(host, protocol, port, output_dir)
+                            #run_nikto(host, protocol, port, output_dir)
 
                 else:
                     print(f"Skipping {file_path}: Missing necessary columns.")
@@ -266,7 +257,26 @@ class ServiceEnum:
                 time.sleep(1)
         except KeyboardInterrupt:
             observer.stop()
-        observer.join()
+            observer.join()
+            
+'''
+        try:
+            while (observer.event_queue.unfinished_tasks != 0):
+                print("anything")
+                time.sleep(1)
+                #observer.stop()
+                #observer.join()
+                if (observer.event_queue.unfinished_tasks == 0):
+                    observer.stop()
+                    observer.join()
+        except KeyboardInterrupt:
+            observer.stop()
+            observer.join()
+'''
+
+
+
+
 
 if __name__ == "__main__":
     # Arguments
@@ -283,7 +293,7 @@ if __name__ == "__main__":
     hosts = args.hosts
     output_dir = args.out or Path.cwd()
     wordlist = args.wordlist or Path  ("/usr") / ("share") / ("seclists") / ("seclists") / ("Discovery") / ("Web-Content") / ("directory-list-2.3-medium.txt")
-    print(wordlist)
+    #print(wordlist)
 
 
     if not target:
