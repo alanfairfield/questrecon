@@ -1,20 +1,19 @@
 import os
 import argparse
-import sys
 import time
 import csv
 import pandas as pd
 import nmap
 from colorama import Fore, Back, Style
 from pathlib import Path
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed
 import threading
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 # SMB module test
 import modules.smb
-from modules.http import run_nikto, run_feroxbuster
+from modules.http import run_nikto, run_feroxbuster, curl, searchsploit
 modules.smb.test()  # Module import test
 
 # Define a class for Scanner object 
@@ -137,6 +136,7 @@ class Scanner:
 
         except Exception as e:
             print(f"[-] UDP service scan error for {target}:{port}: {e}")
+
         # Scan hosts from host files, treating host in hosts as target
     def scan_multiple_hosts(self):
         with open(self.hosts_file, 'r') as file:
@@ -186,6 +186,7 @@ class Scanner:
         elif self.hosts_file:
             self.scan_multiple_hosts()
 
+
 class ServiceEnum:
     def __init__(self, output_dir):
         self.output_dir = output_dir
@@ -194,7 +195,7 @@ class ServiceEnum:
         print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+] Service Detected: {host}:{port} ({protocol}) - {service_name} ({product})" + Style.RESET_ALL)
 
     def process_csv(self, file_path):
-        retries = 3 # increase if low bandwidth testing multiplies instance of errors
+        retries = 5 # increase if low bandwidth testing multiplies instance of errors
         while retries > 0:
             try:
                 # Check if the file is still being written (size stable for a certain period)
@@ -215,11 +216,24 @@ class ServiceEnum:
                         port = row['port']
                         service_name = row['name']
                         product = row['product']
-                        # Service Enum Logic
+
+                        # Service Enum Logic - is Feroxbuster holding up the interpreter? use futures.result() logic (found at bottom). Keyboard interrupt makes program continue
                         if protocol == 'tcp' and 'http' in service_name:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
+
+                            with ThreadPoolExecutor() as executor:
+                                futures = [
+
+                                executor.submit(run_feroxbuster, host, protocol, port, output_dir, wordlist)
+                                
+                                ]
+                                for future in futures:
+                                    future.result()
+
+                            curl(host, protocol, port, output_dir)
+                            searchsploit(host, protocol, port, output_dir, wordlist)
                             run_nikto(host, protocol, port, output_dir)
-                            run_feroxbuster(host, protocol, port, output_dir, wordlist)
+
                 else:
                     print(f"Skipping {file_path}: Missing necessary columns.")
                 break  # Exit retry loop if successful
@@ -236,8 +250,8 @@ class ServiceEnum:
         if event.is_directory:
             return
 
-        if event.src_path.endswith('.csv'):
-            #print(f"[+] New CSV file detected: {event.src_path}") # test statement
+        if event.src_path.endswith('info.csv'):
+            print(f"[+] New CSV file detected: {event.src_path}") # test statement
             self.process_csv(event.src_path)
 
     def start_watching(self):
@@ -289,8 +303,3 @@ if __name__ == "__main__":
         # Wait for both tasks to complete
         for future in futures:
             future.result()
-            #test- does this interfere with extensive scanning?
-            if future == len[futures]:
-                print("Scan Complete!")
-                sys.exit(0)
-                

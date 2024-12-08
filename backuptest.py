@@ -6,14 +6,14 @@ import pandas as pd
 import nmap
 from colorama import Fore, Back, Style
 from pathlib import Path
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed
 import threading
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 # SMB module test
-import modules.smb
-modules.smb.test()  # Module import test
+from modules.http import run_nikto, run_feroxbuster, curl, searchsploit
+
 
 # Define a class for Scanner object 
 class Scanner:
@@ -187,6 +187,11 @@ class ServiceEnum:
                         product = row['product']
                         if protocol == 'tcp' and 'http' in service_name:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
+                            curl(host, protocol, port, output_dir)
+                            searchsploit(host, protocol, port, output_dir, wordlist)
+                            run_nikto(host, protocol, port, output_dir)
+                            with ProcessPoolExecutor() as executor:
+                                executor.submit(run_feroxbuster, host, protocol, port, output_dir, wordlist)
                 else:
                     print(f"Skipping {file_path}: Missing necessary columns.")
                 break  # Exit retry loop if successful
@@ -227,12 +232,16 @@ if __name__ == "__main__":
     parser.add_argument('-t', '--target', help='Specify the target IP address, CIDR range, or hostname')
     parser.add_argument('-H', '--hosts', help='Specify the path to a file containing host(s) separated by one or more spaces, tabs, or newlines')
     parser.add_argument('-o', '--out', help='Specify the directory name path to output the results. E.g., ~/Pentests/Client1')
+    parser.add_argument('-w', '--wordlist', help='Specify the path to a wordlist containing directory-names for web enumeration. If no argument is provided, /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt from default kali linux will be used')
+
     args = parser.parse_args()
 
     # Variables from arguments
     target = args.target
     hosts = args.hosts
     output_dir = args.out or os.getcwd()
+    wordlist = args.wordlist or Path  ("/usr") / ("share") / ("seclists") / ("seclists") / ("Discovery") / ("Web-Content") / ("directory-list-2.3-medium.txt")
+
 
     if not target and not hosts:
         print(f"[+] Provide a target using -t <target> or -H <hosts.txt>")
