@@ -4,6 +4,7 @@ import time
 import csv
 import pandas as pd
 import nmap
+import subprocess
 from colorama import Fore, Back, Style
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed
@@ -11,9 +12,10 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 # SMB module test
-import modules.smb
-from modules.http import run_nikto, run_feroxbuster, curl, searchsploit, all_http
-modules.smb.test()  # Module import test
+from modules.searchsploit import searchsploit
+#from modules.ftp import all_ftp
+from modules.http import all_http
+
 
 # Define a class for Scanner object 
 class Scanner:
@@ -292,7 +294,9 @@ if __name__ == "__main__":
     target = args.target
     hosts = args.hosts
     output_dir = args.out or Path.cwd()
-    wordlist = args.wordlist or Path  ("/usr") / ("share") / ("seclists") / ("seclists") / ("Discovery") / ("Web-Content") / ("directory-list-2.3-medium.txt")
+    wordlist_path = subprocess.getoutput(["locate directory-list-2.3-medium.txt | head -n 1"]) # can be replaced with any solid default wordlist
+    wordlist = args.wordlist or wordlist_path
+    # or Path  ("/usr") / ("share") / ("seclists") / ("seclists") / ("Discovery") / ("Web-Content") / ("directory-list-2.3-medium.txt")
     #print(wordlist)
 
 

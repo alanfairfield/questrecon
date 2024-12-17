@@ -1,6 +1,5 @@
 import subprocess
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
-import nmap
 
 
 def curl(host, protocol, port, output_dir):
@@ -12,11 +11,13 @@ def run_nikto(host, protocol, port, output_dir):
 
 def nmap_vuln(host, protocol, port, output_dir):
     print(f"Running Nmap Script-Scan against {host}:{port}")
-    #nm = nmap.PortScanner
-    command = ((f"nmap.PortScanner.scan({host}, arguments='-p{port} --script 'vuln' -oN {output_dir}/results/{host}/{protocol}/{port}/nmap_vuln_scan.txt'"))
-    print(command) # Test statement
+    sq = r"'"
+    #command = (f"nm.scan{lp}{host}, arguments=" + f"{dq}-p{port} --script {sq}vuln{sq} -oN {output_dir}/results/{host}/{protocol}/{port}/nmap_{port}_vuln_scan.txt{dq}{rp}")
+    #print(f"TEST nmap vuln scan command == {command}") # Test statement
+    # nm.scan(target, arguments=f"-sU -F -oN {target_dir}/quick_nmap_udp")
+    # nm.scan(192.168.56.5, arguments="-p80 --script 'vuln' -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/tcp/80/nmap_80_vuln_scan.txt")
     try:
-        subprocess.Popen([command], shell=True)
+        subprocess.Popen([f"nmap {host} -p{port} --script {sq}vuln{sq} -oN {output_dir}/results/{host}/{protocol}/{port}/nmap_{port}_vuln_scan.txt"], shell=True)
     except Exception as e:
         print(f"Error in nmap_vuln function: {e}")
 
