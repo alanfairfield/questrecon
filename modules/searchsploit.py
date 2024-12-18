@@ -6,8 +6,10 @@ def searchsploit(host, protocol, port, output_dir, product):
 
     with open (f'{output_dir}/results/{host}/{protocol}/{port}/searchsploit.txt') as file:
         for line in file:
-            if 'Exploits: No Results' in line:
-                pass
+            if 'Exploit Title' in line:
+                print(f"Possible vendor exploit(s) found for {product} on {host}:{port}! Results stored in {output_dir}/results/{host}/{protocol}/{port}/searchsploit.txt")
             else:
-                for _ in range(1):
-                    print(f"Possible exploit found for {product} on {host}:{port}! Results stored in {output_dir}/results/{host}/{protocol}/{port}/searchsploit.txt")
+                break
+
+              
+# print statement doesn't work - investigate

@@ -13,7 +13,7 @@ from watchdog.events import FileSystemEventHandler
 
 # SMB module test
 from modules.searchsploit import searchsploit
-#from modules.ftp import all_ftp
+from modules.ftp import all_ftp
 from modules.http import all_http
 
 
@@ -95,7 +95,7 @@ class Scanner:
             print(Fore.GREEN + f"[+] Service scan completed for TCP port {port} on {target}" + Style.RESET_ALL)
                 
             host_info = nm[target]
-            product = host_info.get('tcp', {}).get(port, {}).get('product', 'Unknown')
+            product = host_info.get('tcp', {}).get(port, {}).get('product', 'Unknown') # product = host_info.get('tcp', {}).get(port, {}).get('product', 'Unknown') 
             service_name = host_info.get('tcp', {}).get(port, {}).get('name', 'Unknown')
 
             if not service_info_dir.exists():
@@ -193,10 +193,10 @@ class ServiceEnum:
         self.output_dir = output_dir
 
     def handle_service_enumeration(self, host, protocol, port, service_name, product):
-        print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+] Service Detected: {host}:{port} ({protocol}) - {service_name} ({product})" + Style.RESET_ALL)
+        print(Fore.YELLOW + Back.BLACK + Style.BRIGHT + f"[+] Service Detected: {host}:{port} ({protocol}) - {service_name} ({product})" + Style.RESET_ALL)
 
     def process_csv(self, file_path):
-        retries = 5 # increase if low bandwidth testing multiplies instance of errors
+        retries = 10 # increase if low bandwidth testing multiplies instance of errors
         while retries > 0:
             try:
                 # Check if the file is still being written (size stable for a certain period)
@@ -204,7 +204,7 @@ class ServiceEnum:
                 time.sleep(1)  
                 final_size = os.path.getsize(file_path)
                 if initial_size != final_size:
-                    print(f"File {file_path} is still being written, retrying...")
+                    #print(f"File {file_path} is still being written, retrying...") Test statement
                     retries -= 1
                     time.sleep(5)  # Wait before retrying
                     continue
@@ -222,10 +222,11 @@ class ServiceEnum:
                         if protocol == 'tcp' and 'http' in service_name:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
                             all_http(host, protocol, port, output_dir, wordlist, product)
-                            #run_feroxbuster(host, protocol, port, output_dir, wordlist)
-                               
-                            #curl(host, protocol, port, output_dir)
-                            #run_nikto(host, protocol, port, output_dir)
+                        if protocol == 'tcp' and 'ftp' in service_name:
+                            self.handle_service_enumeration(host, protocol, port, service_name, product)
+                            all_ftp(host, protocol, port, output_dir, product, username_list, password_list)
+                            
+            
 
                 else:
                     print(f"Skipping {file_path}: Missing necessary columns.")
@@ -244,7 +245,7 @@ class ServiceEnum:
             return
 
         if event.src_path.endswith('info.csv'):
-            print(f"[+] New CSV file detected: {event.src_path}") # test statement
+            #print(f"[+] New CSV file detected: {event.src_path}") # test statement
             self.process_csv(event.src_path)
 
     def start_watching(self):
@@ -260,25 +261,6 @@ class ServiceEnum:
         except KeyboardInterrupt:
             observer.stop()
             observer.join()
-            
-'''
-        try:
-            while (observer.event_queue.unfinished_tasks != 0):
-                print("anything")
-                time.sleep(1)
-                #observer.stop()
-                #observer.join()
-                if (observer.event_queue.unfinished_tasks == 0):
-                    observer.stop()
-                    observer.join()
-        except KeyboardInterrupt:
-            observer.stop()
-            observer.join()
-'''
-
-
-
-
 
 if __name__ == "__main__":
     # Arguments
@@ -286,8 +268,10 @@ if __name__ == "__main__":
     parser.add_argument('-t', '--target', help='Specify the target IP address, CIDR range, or hostname')
     parser.add_argument('-H', '--hosts', help='Specify the path to a file containing host(s) separated by one or more spaces, tabs, or newlines')
     parser.add_argument('-o', '--out', help='Specify the directory name path to output the results. E.g., ~/Pentests/Client1 ... If no argument is provided, ~/results will be created to store output')
-    parser.add_argument('-w', '--wordlist', help='Specify the path to a wordlist containing directory-names for web enumeration. If no argument is provided, /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt from default kali linux will be used')
-   
+    parser.add_argument('-w', '--wordlist', help='Specify the path to a wordlist containing directory-names for web enumeration. If no argument is provided, /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt from seclists will be used')
+    parser.add_argument('-u', '--user', help='Specify a single username, or the path to a wordlist containing usernames. If no argument is provided, /usr/share/seclists/Usernames/top-usernames-shortlist.txt from seclists will be used')
+    parser.add_argument('-p', '--password', help='Specify a single password, or the path to a wordlist containing passwords. If no argument is provided, /usr/share/seclists/Passwords/Common-Credentials/10k-most-common.txt from seclists will be used')
+
     args = parser.parse_args()
 
     # Variables from arguments
@@ -296,12 +280,17 @@ if __name__ == "__main__":
     output_dir = args.out or Path.cwd()
     wordlist_path = subprocess.getoutput(["locate directory-list-2.3-medium.txt | head -n 1"]) # can be replaced with any solid default wordlist
     wordlist = args.wordlist or wordlist_path
-    # or Path  ("/usr") / ("share") / ("seclists") / ("seclists") / ("Discovery") / ("Web-Content") / ("directory-list-2.3-medium.txt")
-    #print(wordlist)
+
+    username_list_path = subprocess.getoutput(["locate top-usernames-shortlist.txt | head -n 1"])
+    username_list = args.user or username_list_path
+
+    password_list_path = subprocess.getoutput(["locate 10k-most-common.txt | head -n 1"])
+    password_list = args.password or password_list_path
+ 
 
 
-    if not target:
-        print(f"[+] Provide a target using -t <target> or -H <hosts.txt>")
+    if not target and not hosts:
+        print(f"[+] Provide a target using -t <target> or a target-containing file using -H <hosts.txt>")
 
     # Create Scanner and ServiceEnum objects
     scanner = Scanner(target=target, hosts_file=hosts, output_dir=output_dir)
