@@ -15,6 +15,9 @@ from watchdog.events import FileSystemEventHandler
 from modules.searchsploit import searchsploit
 from modules.ftp import all_ftp
 from modules.http import all_http
+from modules.ssh import all_ssh
+from modules.telnet import all_telnet
+from modules.nmap_vuln import nmap_vuln
 
 
 # Define a class for Scanner object 
@@ -91,7 +94,8 @@ class Scanner:
             service_info_dir = target_dir / f"{port}_service_info.csv"
             target_dir.mkdir(parents=True, exist_ok=True)
 
-            nm.scan(target, arguments=f"-p{port} -sV -sC -oN {target_dir}/tcp_{port}_service_scan")
+            nm.scan(target, arguments=f"-p{port} -sV -sC --script 'vuln' -oN {target_dir}/tcp_{port}_service_scan")           
+            
             print(Fore.GREEN + f"[+] Service scan completed for TCP port {port} on {target}" + Style.RESET_ALL)
                 
             host_info = nm[target]
@@ -118,7 +122,7 @@ class Scanner:
             target_dir.mkdir(parents=True, exist_ok=True)
             service_info_dir = target_dir / f"{port}_service_info.csv"
         
-            nm.scan(target, arguments=f"-p{port} -sV -sC -sU -oN {target_dir}/udp_{port}_service_scan")
+            nm.scan(target, arguments=f"-p{port} -sV -sC -sU --script 'vuln' -oN {target_dir}/udp_{port}_service_scan")
             print(Fore.GREEN + f"[+] Service scan completed for UDP port {port} on {target}" + Style.RESET_ALL)
 
             host_info = nm[target]
@@ -218,13 +222,19 @@ class ServiceEnum:
                         service_name = row['name']
                         product = row['product']
 
-                        # Service Enum Logic - is Feroxbuster holding up the interpreter? use futures.result() logic (found at bottom). Keyboard interrupt makes program continue
+                        # Service Enum Logic 
                         if protocol == 'tcp' and 'http' in service_name:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
                             all_http(host, protocol, port, output_dir, wordlist, product)
                         if protocol == 'tcp' and 'ftp' in service_name:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
                             all_ftp(host, protocol, port, output_dir, product, username_list, password_list)
+                        if protocol == 'tcp' and 'ssh' in service_name:
+                            self.handle_service_enumeration(host, protocol, port, service_name, product)
+                            all_ssh(host, protocol, port, output_dir, product, username_list, password_list)
+                        if protocol == 'tcp' and 'telnet' in service_name:
+                            self.handle_service_enumeration(host, protocol, port, service_name, product)
+                            all_telnet(host, protocol, port, output_dir, product, username_list, password_list)
                             
             
 

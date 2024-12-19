@@ -2,6 +2,7 @@ import subprocess
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from colorama import Fore, Back, Style
 from modules.searchsploit import searchsploit
+from modules.nmap_vuln import nmap_vuln
 
 
 def curl(host, protocol, port, output_dir):
@@ -11,32 +12,10 @@ def run_nikto(host, protocol, port, output_dir):
     print(Fore.MAGENTA + Back.BLACK + Style.BRIGHT + f"[+] Running nikto scan against {host}:{port}" + Style.RESET_ALL)
     subprocess.Popen([f"nikto -h {host} > {output_dir}/results/{host}/{protocol}/{port}/nikto.txt"], shell=True)
 
-def nmap_vuln(host, protocol, port, output_dir):
-    print(Fore.CYAN + Back.BLACK + Style.BRIGHT + f"[+] Running Nmap Vuln scan against {host}:{port}" + Style.RESET_ALL)
-    sq = r"'"
-    #command = (f"nm.scan{lp}{host}, arguments=" + f"{dq}-p{port} --script {sq}vuln{sq} -oN {output_dir}/results/{host}/{protocol}/{port}/nmap_{port}_vuln_scan.txt{dq}{rp}")
-    #print(f"TEST nmap vuln scan command == {command}") # Test statement
-    # nm.scan(target, arguments=f"-sU -F -oN {target_dir}/quick_nmap_udp")
-    # nm.scan(192.168.56.5, arguments="-p80 --script 'vuln' -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/tcp/80/nmap_80_vuln_scan.txt")
-    try:
-        subprocess.Popen([f"nmap {host} -p{port} --script {sq}vuln{sq} > {output_dir}/results/{host}/{protocol}/{port}/nmap_{port}_vuln_scan.txt"], shell=True)
-    except Exception as e:
-        print(f"Error in nmap_vuln function: {e}")
-
-
 def run_feroxbuster(host, protocol, port, output_dir, wordlist):
     print(Fore.RED + Back.BLACK + Style.BRIGHT + f"[+] Running directory-brute force against {host}:{port}" + Style.RESET_ALL)
     subprocess.Popen([f"echo 'http://{host}:{port}/' | feroxbuster --quiet --auto-tune --stdin --parallel 10 -t 10 -w {wordlist} -x 'txt,html,php,asp,aspx,jsp' > {output_dir}/results/{host}/{protocol}/{port}/dir_brute_force.txt"], shell=True)
-
-
-
-
-
     
-    # command1 = subprocess.run([f"feroxbuster --quiet --auto-tune -u http://{host}:{port}/ -t 10 -w {wordlist} -x 'txt,html,php,asp,aspx,jsp' > {output_dir}/results/{host}/{protocol}/{port}/dir_brute_force.txt"], shell=True)
-    # command2 = subprocess.run([f"echo 'http://{host}:{port}/' | feroxbuster --quiet --auto-tune --stdin --parallel 10 -t 10 -w {wordlist} -x 'txt,html,php,asp,aspx,jsp' > {output_dir}/results/{host}/{protocol}/{port}/dir_brute_force.txt"], shell=Truesubprocess.run([f"echo 'http://{host}:{port}/' | feroxbuster --quiet --auto-tune --stdin --parallel 10 -t 10 -w {wordlist} -x 'txt,html,php,asp,aspx,jsp' > {output_dir}/results/{host}/{protocol}/{port}/dir_brute_force.txt"], shell=True)
-
-
 def all_http(host, protocol, port, output_dir, wordlist, product):
     with ThreadPoolExecutor() as executor:
         executor.submit(curl, host, protocol, port, output_dir)

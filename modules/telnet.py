@@ -9,29 +9,29 @@ def hydra_brute(host, protocol, port, output_dir, username_list, password_list):
     try: # logic to handle file vs folder arguments
 
         if os.path.isfile(username_list) and os.path.isfile(password_list): # both are dir paths to credential file
-            subprocess.Popen([f"hydra -t 4 -V -f -L {username_list} -P {password_list} ssh://{host} -s {port} > {output_dir}/results/{host}/{protocol}/{port}/ssh_brute_force.txt"], shell=True) 
+            subprocess.Popen([f"hydra -t 4 -V -f -L {username_list} -P {password_list} telnet://{host} -s {port} > {output_dir}/results/{host}/{protocol}/{port}/telnet_brute_force.txt"], shell=True) 
         if os.path.isfile(username_list) and os.path.isfile(password_list) == False: # username is dir, pass is string
-            subprocess.Popen([f"hydra -t 4 -V -f -L {username_list} -p {password_list} ssh://{host} -s {port} > {output_dir}/results/{host}/{protocol}/{port}/ssh_brute_force.txt"], shell=True) 
+            subprocess.Popen([f"hydra -t 4 -V -f -L {username_list} -p {password_list} telnet://{host} -s {port} > {output_dir}/results/{host}/{protocol}/{port}/telnet_brute_force.txt"], shell=True) 
         if os.path.isfile(username_list) == False and os.path.isfile(password_list): # username is string, pass is dir
-            subprocess.Popen([f"hydra -t 4 -V -f -l {username_list} -P {password_list} ssh://{host} -s {port} > {output_dir}/results/{host}/{protocol}/{port}/ssh_brute_force.txt"], shell=True) 
+            subprocess.Popen([f"hydra -t 4 -V -f -l {username_list} -P {password_list} telnet://{host} -s {port} > {output_dir}/results/{host}/{protocol}/{port}/telnet_brute_force.txt"], shell=True) 
         else:                                                                   # both are strings
-            subprocess.Popen([f"hydra -t 4-V -f -l {username_list} -p {password_list} ssh://{host} -s {port} > {output_dir}/results/{host}/{protocol}/{port}/ssh_brute_force.txt"], shell=True) 
+            subprocess.Popen([f"hydra -t 4-V -f -l {username_list} -p {password_list} telnet://{host} -s {port} > {output_dir}/results/{host}/{protocol}/{port}/telnet_brute_force.txt"], shell=True) 
 
     except Exception as e:
         print(f"Error in hydra_brute function: {e}")
 
     finally: # does not seem to be working
-        with open (f"{output_dir}/results/{host}/{protocol}/{port}/ssh_brute_force.txt") as file:
+        with open (f"{output_dir}/results/{host}/{protocol}/{port}/telnet_brute_force.txt") as file:
             for line in file:
-                print("ssh_brute test") # test line, remove later
+                print("telnet_brute test") # test line, remove later
                 if '(valid pair found)' in line:
-                    print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+++] Valid SSH credentials found on {host}:{port}. See results at: {output_dir}/results/{host}/{protocol}/{port}/ssh_brute_force.txt." + Style.RESET_ALL)
+                    print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+++] Valid telnet credentials found on {host}:{port}. See results at: {output_dir}/results/{host}/{protocol}/{port}/telnet_brute_force.txt." + Style.RESET_ALL)
                     break # or pass?
                 else:
                     pass
 
 
-def all_ssh(host, protocol, port, output_dir, product, username_list, password_list):
+def all_telnet(host, protocol, port, output_dir, product, username_list, password_list):
     with ThreadPoolExecutor() as executor:
         executor.submit(searchsploit, host, protocol, port, output_dir, product)
         #executor.submit(nmap_vuln, host, protocol, port, output_dir)
