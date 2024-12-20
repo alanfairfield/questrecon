@@ -1,4 +1,5 @@
 import os
+import sys
 import argparse
 import time
 import csv
@@ -16,6 +17,8 @@ from modules.searchsploit import searchsploit
 from modules.ftp import all_ftp
 from modules.http import all_http
 from modules.ssh import all_ssh
+from modules.telnet import all_telnet
+from modules.smb import all_smb
 
 
 # Define a class for Scanner object 
@@ -92,7 +95,8 @@ class Scanner:
             service_info_dir = target_dir / f"{port}_service_info.csv"
             target_dir.mkdir(parents=True, exist_ok=True)
 
-            nm.scan(target, arguments=f"-p{port} -sV -sC -oN {target_dir}/tcp_{port}_service_scan")
+            nm.scan(target, arguments=f"-p{port} -sV -sC --script 'vuln' -oN {target_dir}/tcp_{port}_service_scan")           
+            
             print(Fore.GREEN + f"[+] Service scan completed for TCP port {port} on {target}" + Style.RESET_ALL)
                 
             host_info = nm[target]
@@ -119,7 +123,7 @@ class Scanner:
             target_dir.mkdir(parents=True, exist_ok=True)
             service_info_dir = target_dir / f"{port}_service_info.csv"
         
-            nm.scan(target, arguments=f"-p{port} -sV -sC -sU -oN {target_dir}/udp_{port}_service_scan")
+            nm.scan(target, arguments=f"-p{port} -sV -sC -sU --script 'vuln' -oN {target_dir}/udp_{port}_service_scan")
             print(Fore.GREEN + f"[+] Service scan completed for UDP port {port} on {target}" + Style.RESET_ALL)
 
             host_info = nm[target]
@@ -220,15 +224,22 @@ class ServiceEnum:
                         product = row['product']
 
                         # Service Enum Logic 
-                        if protocol == 'tcp' and 'http' in service_name:
+                        if protocol == 'tcp' and 'http' in service_name or 'http' in product:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
                             all_http(host, protocol, port, output_dir, wordlist, product)
-                        if protocol == 'tcp' and 'ftp' in service_name:
+                        if protocol == 'tcp' and 'ftp' in service_name or 'ftp' in product:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
-                            all_ftp(host, protocol, port, output_dir, product, username_list, password_list)
-                        if protocol == 'tcp' and 'ssh' in service_name:
+                            all_ftp(host, protocol, port, output_dir, product, users, passwords)
+                        if protocol == 'tcp' and 'ssh' in service_name or 'ssh' in product:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
-                            all_ssh(host, protocol, port, output_dir, product, username_list, password_list)
+                            all_ssh(host, protocol, port, output_dir, product, users, passwords)
+                        if protocol == 'tcp' and 'telnet' in service_name or 'telnet' in product:
+                            self.handle_service_enumeration(host, protocol, port, service_name, product)
+                            all_telnet(host, protocol, port, output_dir, product, users, passwords)
+                        if protocol == 'tcp' and 'smb' in service_name or 'smb' in product:
+                            self.handle_service_enumeration(host, protocol, port, service_name, product)
+                            all_smb(host, protocol, port, output_dir, users, passwords)
+
                             
             
 
@@ -285,11 +296,11 @@ if __name__ == "__main__":
     wordlist_path = subprocess.getoutput(["locate directory-list-2.3-medium.txt | head -n 1"]) # can be replaced with any solid default wordlist
     wordlist = args.wordlist or wordlist_path
 
-    username_list_path = subprocess.getoutput(["locate top-usernames-shortlist.txt | head -n 1"])
-    username_list = args.user or username_list_path
+    users_path = subprocess.getoutput(["locate top-usernames-shortlist.txt | head -n 1"])
+    users = args.user or users_path
 
-    password_list_path = subprocess.getoutput(["locate 10k-most-common.txt | head -n 1"])
-    password_list = args.password or password_list_path
+    passwords_path = subprocess.getoutput(["locate darkweb2017-top100.txt | head -n 1"])
+    passwords = args.password or passwords_path
  
 
 
@@ -310,3 +321,4 @@ if __name__ == "__main__":
         # Wait for both tasks to complete
         for future in futures:
             future.result()
+            sys.exit(0) # test - possibly remove later
