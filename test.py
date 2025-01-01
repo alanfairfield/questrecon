@@ -13,12 +13,12 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 # SMB module test
-from modules.searchsploit import searchsploit
 from modules.ftp import all_ftp
 from modules.http import all_http
 from modules.ssh import all_ssh
 from modules.telnet import all_telnet
 from modules.smb import all_smb
+from modules.snmp import all_snmp
 
 
 # Define a class for Scanner object 
@@ -29,7 +29,7 @@ class Scanner:
         self.output_dir = output_dir
 
     def print_ascii_art(self):
-        ascii_art = (Fore.WHITE + Back.BLACK + Style.BRIGHT + r'''
+        ascii_art = (Fore.LIGHTRED_EX + Back.BLACK + Style.BRIGHT + r'''
 +~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-+                                                                   
 |     (                           )   )\ )                               |
 |   ( )\      (      (         ( /(  (()/(     (                         |
@@ -43,7 +43,7 @@ class Scanner:
 ''' + Style.RESET_ALL)
 
         print(ascii_art)
-        print(Fore.WHITE + Back.BLACK + Style.BRIGHT + "The quieter you become, the more you can hear.\n" + Style.RESET_ALL + Style.BRIGHT + '\n...\n')
+        print(Fore.WHITE + Back.BLACK + Style.BRIGHT + "The quieter you become, the more you can hear.\n" + Style.RESET_ALL + Style.BRIGHT)
 
     def create_output_dir(self):
         if not os.path.isdir(self.output_dir):
@@ -58,10 +58,10 @@ class Scanner:
         try:
             target_dir = Path(self.output_dir) / "results" / target
             target_dir.mkdir(parents=True, exist_ok=True)
-            print(Fore.GREEN + f"[+] Running Quick UDP scan on {target}..." + Style.RESET_ALL)
+            print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+] Running quick UDP scan on" + Style.RESET_ALL + Style.BRIGHT + Fore.YELLOW + Back.BLACK + f" {target} " + Style.RESET_ALL + Fore.GREEN + Back.BLACK + Style.BRIGHT +"to determine which ports are open..." + Style.RESET_ALL)
             nm.scan(target, arguments=f"-sU -F -oN {target_dir}/quick_nmap_udp")
             udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
-            print(f"[+] UDP Ports open on {target}: {list(udp_ports)}")
+            print(Fore.LIGHTMAGENTA_EX + Style.BRIGHT + Back.BLACK + f"[+] UDP Ports open on {target}: " + Style.RESET_ALL + Fore.LIGHTGREEN_EX + Style.BRIGHT + Back.BLACK +  f"{list(udp_ports)}" + Style.RESET_ALL)
 
             return set(udp_ports)
         
@@ -75,10 +75,10 @@ class Scanner:
             target_dir = Path(self.output_dir) / "results" / target
             target_dir.mkdir(parents=True, exist_ok=True)
     
-            print(Fore.GREEN + f"[+] Running Full TCP scan on {target} to determine which ports are open..." + Style.RESET_ALL)
+            print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+] Running Full TCP scan on" + Style.RESET_ALL + Style.BRIGHT + Fore.YELLOW + Back.BLACK + f" {target} " + Style.RESET_ALL + Fore.GREEN + Back.BLACK + Style.BRIGHT +"to determine which ports are open..." + Style.RESET_ALL)
             nm.scan(target, arguments=f"-p- -oN {target_dir}/quick_nmap_tcp")
             tcp_ports = nm[target]['tcp'].keys() if 'tcp' in nm[target] else []
-            print(f"[+] TCP Ports open on {target}: {list(tcp_ports)}")
+            print(Fore.LIGHTMAGENTA_EX + Style.BRIGHT + Back.BLACK + f"[+] TCP Ports open on {target}: " + Style.RESET_ALL + Fore.LIGHTGREEN_EX + Style.BRIGHT + Back.BLACK +  f"{list(tcp_ports)}" + Style.RESET_ALL)
 
             return set(tcp_ports)
         
@@ -95,7 +95,7 @@ class Scanner:
             service_info_dir = target_dir / f"{port}_service_info.csv"
             target_dir.mkdir(parents=True, exist_ok=True)
 
-            nm.scan(target, arguments=f"-p{port} -sV -sC --script 'vuln' -oN {target_dir}/tcp_{port}_service_scan")           
+            nm.scan(target, arguments=f"-p{port} -sV --script='vuln and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)' -oN {target_dir}/tcp_{port}_service_scan")  
             
             print(Fore.GREEN + f"[+] Service scan completed for TCP port {port} on {target}" + Style.RESET_ALL)
                 
@@ -123,7 +123,7 @@ class Scanner:
             target_dir.mkdir(parents=True, exist_ok=True)
             service_info_dir = target_dir / f"{port}_service_info.csv"
         
-            nm.scan(target, arguments=f"-p{port} -sV -sC -sU --script 'vuln' -oN {target_dir}/udp_{port}_service_scan")
+            nm.scan(target, arguments=f"-p{port} -sV -oN {target_dir}/udp_{port}_service_scan")
             print(Fore.GREEN + f"[+] Service scan completed for UDP port {port} on {target}" + Style.RESET_ALL)
 
             host_info = nm[target]
@@ -151,7 +151,7 @@ class Scanner:
         with ThreadPoolExecutor() as executor:
             future_to_host = {} # Empty dict to store future objects
             for host in host_list:
-                print(Fore.CYAN + f"[+] Starting scans for host: {host}" + Style.RESET_ALL)
+                print(Fore.CYAN + Back.BLACK + Style.BRIGHT +f"[+] Host initialized: {host}" + Style.RESET_ALL)
                 future_to_host[executor.submit(self.tcp_nmap, host)] = (host, 'tcp') # Quick TCP
                 future_to_host[executor.submit(self.udp_nmap, host)] = (host, 'udp') # Quick UDP
 
@@ -159,16 +159,13 @@ class Scanner:
                 host, scan_type = future_to_host[future]
                 try:
                     ports = future.result()
-                    if scan_type == 'tcp':
-                        print(Fore.GREEN + f"[+] TCP Ports open on {host}: {list(ports)}" + Style.RESET_ALL)
-                        for port in ports:
-                            executor.submit(self.tcp_service, host, port)
-                    elif scan_type == 'udp':
-                        print(Fore.GREEN + f"[+] UDP Ports open on {host}: {list(ports)}" + Style.RESET_ALL)
-                        for port in ports:
-                            executor.submit(self.udp_service, host, port)
+                    for port in ports:
+                        executor.submit(self.tcp_service, host, port)
+                        executor.submit(self.udp_service, host, port)
+
                 except Exception as e:
-                    print(f"[-] Error processing {scan_type.upper()} scan for {host}: {e}")
+                    #print(f"[-] Error processing {scan_type.upper()} scan for {host}: {e}")
+                    pass # Unavoidable that service names will show up with less than 100% reliability on nmap scans
 
     def run(self):
         self.print_ascii_art()
@@ -199,9 +196,10 @@ class ServiceEnum:
 
     def handle_service_enumeration(self, host, protocol, port, service_name, product):
         print(Fore.YELLOW + Back.BLACK + Style.BRIGHT + f"[+] Service Detected: {host}:{port} ({protocol}) - {service_name} ({product})" + Style.RESET_ALL)
+        
 
     def process_csv(self, file_path):
-        retries = 10 # increase if low bandwidth testing multiplies instance of errors
+        retries = 5 # increase if low bandwidth testing multiplies instance of errors
         while retries > 0:
             try:
                 # Check if the file is still being written (size stable for a certain period)
@@ -226,19 +224,27 @@ class ServiceEnum:
                         # Service Enum Logic 
                         if protocol == 'tcp' and 'http' in service_name or 'http' in product:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
-                            all_http(host, protocol, port, output_dir, wordlist, product)
+                            all_http(host, protocol, port, output_dir, wordlist, product, wordpress_dir=any)
+
                         if protocol == 'tcp' and 'ftp' in service_name or 'ftp' in product:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
                             all_ftp(host, protocol, port, output_dir, product, users, passwords)
+
                         if protocol == 'tcp' and 'ssh' in service_name or 'ssh' in product:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
                             all_ssh(host, protocol, port, output_dir, product, users, passwords)
+
                         if protocol == 'tcp' and 'telnet' in service_name or 'telnet' in product:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
                             all_telnet(host, protocol, port, output_dir, product, users, passwords)
+
                         if protocol == 'tcp' and 'smb' in service_name or 'smb' in product:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
-                            all_smb(host, protocol, port, output_dir, users, passwords)
+                            all_smb(host, protocol, port, output_dir, product, users, passwords)
+
+                        if protocol == 'udp' and 'snmp' in service_name or 'snmp' in product:
+                            self.handle_service_enumeration(host, protocol, port, service_name, product)
+                            all_snmp(host, protocol, port, output_dir)
 
                             
             
@@ -247,12 +253,13 @@ class ServiceEnum:
                     print(f"Skipping {file_path}: Missing necessary columns.")
                 break  # Exit retry loop if successful
             except Exception as e:
-                print(f"Error processing file {file_path}: {e}")
+                #print(f"Error processing file {file_path}: {e}")
                 retries -= 1
                 time.sleep(5)  # Wait before retrying
 
         if retries == 0:
-            print(f"Failed to process {file_path} after multiple attempts.")
+            #print(f"Failed to process {file_path} after multiple attempts.")
+            pass
 
     def on_created(self, event):
         """Handle newly created files."""

@@ -1,6 +1,5 @@
 import subprocess
 from colorama import Fore, Back, Style
-from modules.searchsploit import searchsploit
 
 def nmap_vuln(host, protocol, port, output_dir):
     print(Fore.CYAN + Back.BLACK + Style.BRIGHT + f"[+] Running Nmap Vuln scan against {host}:{port}" + Style.RESET_ALL)

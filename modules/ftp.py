@@ -21,23 +21,22 @@ def hydra_brute(host, protocol, port, output_dir, users, passwords): # define us
     except Exception as e:
         print(f"Error in hydra_brute function: {e}")
 
-    finally: # does not seem to be working
-        with open (f"{output_dir}/results/{host}/{protocol}/{port}/ftp_brute_force.txt") as file:
-            for line in file:
-                print("hydra_brute test") # test line, remove later
-                if '(valid pair found)' in line:
-                    print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+++] Valid FTP credentials found on {host}:{port}. See results at: {output_dir}/results/{host}/{protocol}/{port}/ftp_brute_force.txt." + Style.RESET_ALL)
-                    break # or pass?
-                else:
-                    pass
+    
 
 def all_ftp(host, protocol, port, output_dir, product, users, passwords):
     with ThreadPoolExecutor() as executor:
         executor.submit(searchsploit, host, protocol, port, output_dir, product)
-        #executor.submit(nmap_vuln, host, protocol, port, output_dir)
         executor.submit(hydra_brute, host, protocol, port, output_dir, users, passwords)
+        if os.path.exists(f"{output_dir}/results/{host}/{protocol}/{port}/ftp_brute_force.txt"):
+            with open (f"{output_dir}/results/{host}/{protocol}/{port}/ftp_brute_force.txt") as file:
+                for line in file:
+                    if '(valid pair found)' in line:
+                        print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+++] Valid FTP credentials found on {host}:{port}. See results at: {output_dir}/results/{host}/{protocol}/{port}/ftp_brute_force.txt." + Style.RESET_ALL)
+                        break # or pass?
+                    else:
+                        pass
 
-        
+        # file error is due to the (valid pair found) pattern matching looking for {output_dir}/results/{host}/{protocol}/{port}/ftp_brute_force.txt before it exists 
 
 
 

@@ -21,15 +21,7 @@ def hydra_brute(host, protocol, port, output_dir, users, passwords): # define us
     except Exception as e:
         print(f"Error in hydra_brute function: {e}")
 
-    finally: # does not seem to be working - maybe this can be broken out into its own function and run at the bottom of all_telnet- same with ssh
-        with open (f"{output_dir}/results/{host}/{protocol}/{port}/telnet_brute_force.txt") as file:
-            for line in file:
-                print("telnet_brute test") # test line, remove later
-                if '(valid pair found)' in line:
-                    print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+++] Valid telnet credentials found on {host}:{port}. See results at: {output_dir}/results/{host}/{protocol}/{port}/telnet_brute_force.txt." + Style.RESET_ALL)
-                    break # or pass?
-                else:
-                    pass
+
 
 
 def all_telnet(host, protocol, port, output_dir, product, users, passwords):
@@ -37,3 +29,13 @@ def all_telnet(host, protocol, port, output_dir, product, users, passwords):
         executor.submit(searchsploit, host, protocol, port, output_dir, product)
         #executor.submit(nmap_vuln, host, protocol, port, output_dir)
         executor.submit(hydra_brute, host, protocol, port, output_dir, users, passwords)
+        if os.path.exists(f"{output_dir}/results/{host}/{protocol}/{port}/telnet_brute_force.txt"):
+            with open (f"{output_dir}/results/{host}/{protocol}/{port}/telnet_brute_force.txt") as file:
+                for line in file:
+                    if '(valid pair found)' in line:
+                        print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+++] Valid telnet credentials found on {host}:{port}. See results at: {output_dir}/results/{host}/{protocol}/{port}/telnet_brute_force.txt." + Style.RESET_ALL)
+                        break # or pass?
+                    else:
+                        pass
+
+        # file error is due to the (valid pair found) pattern matching looking for {output_dir}/results/{host}/{protocol}/{port}/telnet_brute_force.txt before it exists 
