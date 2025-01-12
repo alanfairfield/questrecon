@@ -65,8 +65,12 @@ def all_http(host, protocol, port, output_dir, wordlist, product, wordpress_dir)
                     with ThreadPoolExecutor() as executor:
                         executor.submit(run_wpscanner, host, protocol, port, output_dir, wordpress_dir)
                     break
-                elif 'robots' in line:
+                if 'robots' in line:
                     subprocess.Popen([f"curl http://{host}:{port}/robots.txt > {output_dir}/results/{host}/{protocol}/{port}/{host}:{port}_robots.txt"], shell=True)
+                if 'phpinfo.php' in line:
+                    print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+] phpinfo.php directory found: http://{host}:{port}/phpinfo.php" + Style.RESET_ALL)
+                if 'phpmyadmin' in line:
+                    print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+] phpmyadmin.php directory found: http://{host}:{port}/phpmyadmin" + Style.RESET_ALL)
                 else:
                     pass
 

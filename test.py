@@ -8,7 +8,7 @@ import nmap
 import subprocess
 from colorama import Fore, Back, Style
 from pathlib import Path
-from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
@@ -58,7 +58,7 @@ class Scanner:
         try:
             target_dir = Path(self.output_dir) / "results" / target
             target_dir.mkdir(parents=True, exist_ok=True)
-            print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+] Running quick UDP scan on" + Style.RESET_ALL + Style.BRIGHT + Fore.YELLOW + Back.BLACK + f" {target} " + Style.RESET_ALL + Fore.GREEN + Back.BLACK + Style.BRIGHT +"to determine which ports are open..." + Style.RESET_ALL)
+            print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+] Running Quick UDP scan on" + Style.RESET_ALL + Style.BRIGHT + Fore.YELLOW + Back.BLACK + f" {target} " + Style.RESET_ALL + Fore.GREEN + Back.BLACK + Style.BRIGHT +"to determine which ports are open..." + Style.RESET_ALL)
             nm.scan(target, arguments=f"-sU -F -oN {target_dir}/quick_nmap_udp")
             udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
             print(Fore.LIGHTMAGENTA_EX + Style.BRIGHT + Back.BLACK + f"[+] UDP Ports open on {target}: " + Style.RESET_ALL + Fore.LIGHTGREEN_EX + Style.BRIGHT + Back.BLACK +  f"{list(udp_ports)}" + Style.RESET_ALL)
@@ -156,7 +156,7 @@ class Scanner:
                 future_to_host[executor.submit(self.udp_nmap, host)] = (host, 'udp') # Quick UDP
 
             for future in as_completed(future_to_host): 
-                host, scan_type = future_to_host[future]
+                host, port = future_to_host[future]
                 try:
                     ports = future.result()
                     for port in ports:
