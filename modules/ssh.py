@@ -27,6 +27,7 @@ def all_ssh(host, protocol, port, output_dir, product, users, passwords):
         executor.submit(searchsploit, host, protocol, port, output_dir, product)
         #executor.submit(nmap_vuln, host, protocol, port, output_dir)
         executor.submit(hydra_brute, host, protocol, port, output_dir, users, passwords)
+        
         if os.path.exists(f"{output_dir}/results/{host}/{protocol}/{port}/ssh_brute_force.txt"):
             with open (f"{output_dir}/results/{host}/{protocol}/{port}/ssh_brute_force.txt") as file:
                 for line in file:

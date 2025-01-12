@@ -13,6 +13,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 # SMB module test
+from modules.environment import dependancy_check
 from modules.ftp import all_ftp
 from modules.http import all_http
 from modules.ssh import all_ssh
@@ -43,7 +44,9 @@ class Scanner:
 ''' + Style.RESET_ALL)
 
         print(ascii_art)
-        print(Fore.WHITE + Back.BLACK + Style.BRIGHT + "The quieter you become, the more you can hear.\n" + Style.RESET_ALL + Style.BRIGHT)
+        print(Fore.WHITE + Back.BLACK + Style.BRIGHT + "The quieter you become, the more you can hear.\n" + Style.RESET_ALL)
+        # Check environment for tools, ensure they are installed
+        #dependancy_check()
 
     def create_output_dir(self):
         if not os.path.isdir(self.output_dir):
@@ -246,23 +249,20 @@ class ServiceEnum:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
                             all_snmp(host, protocol, port, output_dir)
 
-                            
-            
-
                 else:
                     print(f"Skipping {file_path}: Missing necessary columns.")
                 break  # Exit retry loop if successful
             except Exception as e:
                 #print(f"Error processing file {file_path}: {e}")
                 retries -= 1
-                time.sleep(5)  # Wait before retrying
+                time.sleep(2)  # Wait before retrying
 
         if retries == 0:
             #print(f"Failed to process {file_path} after multiple attempts.")
             pass
 
     def on_created(self, event):
-        """Handle newly created files."""
+        #Handle newly created files.
         if event.is_directory:
             return
 
@@ -308,12 +308,13 @@ if __name__ == "__main__":
 
     passwords_path = subprocess.getoutput(["locate darkweb2017-top100.txt | head -n 1"])
     passwords = args.password or passwords_path
- 
-
 
     if not target and not hosts:
         print(f"[+] Provide a target using -t <target> or a target-containing file using -H <hosts.txt>")
 
+    # Check for linux tools, dependancies, etc.
+    dependancy_check()
+    
     # Create Scanner and ServiceEnum objects
     scanner = Scanner(target=target, hosts_file=hosts, output_dir=output_dir)
     service_enum = ServiceEnum(output_dir)

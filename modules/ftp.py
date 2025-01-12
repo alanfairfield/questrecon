@@ -27,6 +27,7 @@ def all_ftp(host, protocol, port, output_dir, product, users, passwords):
     with ThreadPoolExecutor() as executor:
         executor.submit(searchsploit, host, protocol, port, output_dir, product)
         executor.submit(hydra_brute, host, protocol, port, output_dir, users, passwords)
+        
         if os.path.exists(f"{output_dir}/results/{host}/{protocol}/{port}/ftp_brute_force.txt"):
             with open (f"{output_dir}/results/{host}/{protocol}/{port}/ftp_brute_force.txt") as file:
                 for line in file:
