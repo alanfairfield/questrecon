@@ -27,7 +27,7 @@ def dependancy_check():
         
     #print(' '.join(missing_tools))
 
-    
-    print(ascii_art)  
-    print(Fore.YELLOW + Back.BLACK + Style.BRIGHT +f"[-] The following tools required to run QuestRecon are not found on your system: {' '.join(missing_tools)}\n\n" + Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+] Run: sudo apt-get update && sudo apt-get install {' '.join(missing_tools)}" + Style.RESET_ALL)
-    sys.exit(1)
+    if missing_tools:
+        print(ascii_art)  
+        print(Fore.YELLOW + Back.BLACK + Style.BRIGHT +f"[-] The following tools required to run QuestRecon are not found on your system: {' '.join(missing_tools)}\n\n" + Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+] Run: sudo apt-get update && sudo apt-get install {' '.join(missing_tools)}" + Style.RESET_ALL)
+        sys.exit(1)

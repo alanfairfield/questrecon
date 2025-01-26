@@ -328,7 +328,7 @@ if __name__ == "__main__":
         futures = [
             executor.submit(scanner.run),  # Start scanning
             executor.submit(service_enum.start_watching)  # Start file watching
-        ]
+                    ]
 
         # Wait for both tasks to complete
         for future in futures:

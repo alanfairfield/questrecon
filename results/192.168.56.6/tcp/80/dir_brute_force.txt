@@ -1,4 +1,0 @@
-403      GET       11l       32w        -c Auto-filtering found 404-like response and created new filter; toggle off with --dont-filter
-404      GET       15l       51w        -c Auto-filtering found 404-like response and created new filter; toggle off with --dont-filter
-404      GET       15l       51w      746c Auto-filtering found 404-like response and created new filter; toggle off with --dont-filter
-301      GET        9l       28w      312c http://192.168.56.6/ossec => http://192.168.56.6/ossec/

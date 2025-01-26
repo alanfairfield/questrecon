@@ -1,2 +1,0 @@
-host,protocol,port,name,product
-192.168.56.6,tcp,995,pop3,Dovecot pop3d
