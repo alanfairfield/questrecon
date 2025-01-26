@@ -62,29 +62,6 @@ Wordlist: /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
 Usernames: /usr/share/seclists/Usernames/top-usernames-shortlist.txt
 Passwords: /usr/share/seclists/Passwords/Common-Credentials/10k-most-common.txt
 
-## Example output directory structure
-<output_directory>/
-
-├── results/
-
-│   ├── <target>/
-
-│   │   ├── tcp/
-
-│   │   │   ├── <port>/
-
-│   │   │   │   ├── tcp_<port>_service_scan
-
-│   │   │   │   ├── <port>_service_info.csv
-
-│   │   ├── udp/
-
-│   │   │   ├── <port>/
-
-│   │   │   │   ├── udp_<port>_service_scan
-
-│   │   │   │   ├── <port>_service_info.csv
-
 # Disclaimer
 QuestRecon is intended for authorized security testing and research purposes only. Unauthorized use may violate laws and agreements, and contributors to QuestRecon accept no responsibility for damage caused by misuse.
 
