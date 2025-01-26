@@ -36,7 +36,7 @@ The tool supports:
 ## Dependencies
 Ensure the following are installed:
 - **Python**: >= 3.6
-- **Modules**: Install using:
+- **Install Modules**:
 
   pip3 install -r requirements.txt
   
