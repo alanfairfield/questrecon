@@ -41,13 +41,13 @@ Ensure the following are installed:
   
   **Required modules include:**
 
-      _colorama_
+      colorama
 
-      _pandas_
+      pandas
 
-      _nmap_
-      
-      _watchdog_
+      nmap
+
+      watchdog
 
 # Usage
 ## Target a single host
