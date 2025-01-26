@@ -65,14 +65,23 @@ Passwords: /usr/share/seclists/Passwords/Common-Credentials/10k-most-common.txt
 ## Example output directory structure
 <output_directory>/
 ├── results/
+
 │   ├── <target>/
+
 │   │   ├── tcp/
+
 │   │   │   ├── <port>/
+
 │   │   │   │   ├── tcp_<port>_service_scan
+
 │   │   │   │   ├── <port>_service_info.csv
+
 │   │   ├── udp/
+
 │   │   │   ├── <port>/
+
 │   │   │   │   ├── udp_<port>_service_scan
+
 │   │   │   │   ├── <port>_service_info.csv
 
 # Disclaimer
