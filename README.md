@@ -38,7 +38,7 @@ Ensure the following are installed:
 - **Python**: >= 3.6
 - **Install Modules:**
 
-  pip3 install -r requirements.txt
+    pip3 install -r requirements.txt
   
   **Required modules include:**
 
