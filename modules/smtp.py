@@ -6,4 +6,4 @@ def smtp_vuln(host, protocol, port, output_dir):
     try:
         subprocess.Popen([f"nmap {host} -p{port} --script 'smtp-*' > {output_dir}/results/{host}/{protocol}/{port}/nmap_{port}_smtp_all.txt"], shell=True)
     except Exception as e:
-        print(f"Error in nmap_vuln function: {e}")
+        print(f"Error in smtp_vuln function: {e}")
