@@ -3,7 +3,6 @@ import subprocess
 from colorama import Fore, Back, Style
 from concurrent.futures import ThreadPoolExecutor
 from modules.searchsploit import searchsploit
-from modules.nmap_vuln import nmap_vuln
 
 def hydra_brute(host, protocol, port, output_dir, users, passwords): # define user and password lists
 
