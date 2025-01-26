@@ -58,9 +58,11 @@ python3 questrecon.py -t <target_IP> -o <path_to_output_directory)
 python3 questrecon.py -t <target_IP> -u <username_string_or_directory_path> -p <password_string_or_directory_path> 
 
 ## Default values
-Wordlist: /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-Usernames: /usr/share/seclists/Usernames/top-usernames-shortlist.txt
-Passwords: /usr/share/seclists/Passwords/Common-Credentials/10k-most-common.txt
+_Wordlist_: /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+
+_Usernames_: /usr/share/seclists/Usernames/top-usernames-shortlist.txt
+
+_Passwords_: /usr/share/seclists/Passwords/Common-Credentials/10k-most-common.txt
 
 # Disclaimer
 QuestRecon is intended for authorized security testing and research purposes only. Unauthorized use may violate laws and agreements, and contributors to QuestRecon accept no responsibility for damage caused by misuse.
