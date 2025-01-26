@@ -39,10 +39,13 @@ Ensure the following are installed:
 - **Modules**: Install using:
   pip install -r requirements.txt
   **Required modules include:**
-      colorama
-      pandas
-      nmap
-      watchdog
+      _colorama_
+
+      _pandas_
+
+      _nmap_
+
+      _watchdog_
 
 # Usage
 ## Target a single host
