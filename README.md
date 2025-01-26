@@ -27,6 +27,7 @@ The tool supports:
   - SNMP
   - MySQL
   - RDP
+  - SMTP
     
 - **File Monitoring**: Continuously monitors output directories for updates to CSV files and processes them.
 - **Customizable Input**: Supports custom wordlists, usernames, and passwords for more targeted testing.

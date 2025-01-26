@@ -22,6 +22,7 @@ from modules.smb import all_smb
 from modules.snmp import all_snmp
 from modules.mysql import all_mysql
 from modules.rdp import all_rdp
+from modules.smtp import smtp_vuln
 
 
 # Define a class for Scanner object 
@@ -254,6 +255,10 @@ class ServiceEnum:
                         if protocol == 'tcp' and 'rdp' in service_name or 'rdp' in product:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
                             all_rdp(host, protocol, port, output_dir, product, users, passwords)
+                        
+                        if protocol == 'tcp' and 'smtp' in service_name or 'smtp' in product:
+                            self.handle_service_enumeration(host, protocol, port, service_name, product)
+                            smtp_vuln(host, protocol, port, output_dir)
 
                         if protocol == 'udp' and 'snmp' in service_name or 'snmp' in product:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
