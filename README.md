@@ -64,6 +64,7 @@ Passwords: /usr/share/seclists/Passwords/Common-Credentials/10k-most-common.txt
 
 ## Example output directory structure
 <output_directory>/
+
 ├── results/
 
 │   ├── <target>/
