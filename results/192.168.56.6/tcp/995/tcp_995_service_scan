@@ -1,0 +1,27 @@
+# Nmap 7.94SVN scan initiated Fri Jan 24 23:28:39 2025 as: /usr/lib/nmap/nmap -oX - -p995 -sV "--script=vuln and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)" -oN /home/quest/Github_Repo/questrecon/results/192.168.56.6/tcp/995/tcp_995_service_scan 192.168.56.6
+Nmap scan report for 192.168.56.6
+Host is up (0.00029s latency).
+
+PORT    STATE SERVICE  VERSION
+995/tcp open  ssl/pop3 Dovecot pop3d
+| ssl-dh-params: 
+|   VULNERABLE:
+|   Diffie-Hellman Key Exchange Insufficient Group Strength
+|     State: VULNERABLE
+|       Transport Layer Security (TLS) services that use Diffie-Hellman groups
+|       of insufficient strength, especially those using one of a few commonly
+|       shared groups, may be susceptible to passive eavesdropping attacks.
+|     Check results:
+|       WEAK DH GROUP 1
+|             Cipher Suite: TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA
+|             Modulus Type: Safe prime
+|             Modulus Source: Unknown/Custom-generated
+|             Modulus Length: 1024
+|             Generator Length: 8
+|             Public Key Length: 1024
+|     References:
+|_      https://weakdh.org
+MAC Address: 08:00:27:62:5D:62 (Oracle VirtualBox virtual NIC)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Fri Jan 24 23:28:46 2025 -- 1 IP address (1 host up) scanned in 7.40 seconds

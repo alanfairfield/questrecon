@@ -1,0 +1,21 @@
+--------------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                               |  Path
+--------------------------------------------------------------------------------------------- ---------------------------------
+Apache - Arbitrary Long HTTP Headers (Denial of Service)                                     | multiple/dos/360.pl
+Apache - Arbitrary Long HTTP Headers Denial of Service                                       | linux/dos/371.c
+Apache 0.8.x/1.0.x / NCSA HTTPd 1.x - 'test-cgi' Directory Listing                           | cgi/remote/20435.txt
+Apache 1.1 / NCSA HTTPd 1.5.2 / Netscape Server 1.12/1.1/2.0 - a nph-test-cgi                | multiple/dos/19536.txt
+Apache 1.3.x < 2.0.48 mod_userdir - Remote Users Disclosure                                  | linux/remote/132.c
+Apache 2.0.44 (Linux) - Remote Denial of Service                                             | linux/dos/11.c
+Apache 2.0.45 - 'APR' Crash                                                                  | linux/dos/38.pl
+Apache 2.0.49 - Arbitrary Long HTTP Headers Denial of Service                                | multiple/dos/1056.pl
+Apache 2.0.52 - GET Denial of Service                                                        | multiple/dos/855.pl
+Apache 2.4.23 mod_http2 - Denial of Service                                                  | linux/dos/40909.py
+Apache 2.x - Memory Leak                                                                     | windows/dos/9.c
+Apache HTTP Server 2.4.49 - Path Traversal & Remote Code Execution (RCE)                     | multiple/webapps/50383.sh
+Apache Httpd mod_proxy - Error Page Cross-Site Scripting                                     | multiple/webapps/47688.md
+Apache Httpd mod_rewrite - Open Redirects                                                    | multiple/webapps/47689.md
+Apache Tomcat mod_jk 1.2.20 - Remote Buffer Overflow (Metasploit)                            | windows/remote/16798.rb
+NCSA 1.3/1.4.x/1.5 / Apache HTTPd 0.8.11/0.8.14 - ScriptAlias Source Retrieval               | multiple/remote/20595.txt
+--------------------------------------------------------------------------------------------- ---------------------------------
+Shellcodes: No Results

@@ -20,6 +20,7 @@ from modules.ssh import all_ssh
 from modules.telnet import all_telnet
 from modules.smb import all_smb
 from modules.snmp import all_snmp
+from modules.mysql import all_mysql
 
 
 # Define a class for Scanner object 
@@ -248,7 +249,10 @@ class ServiceEnum:
                         if protocol == 'udp' and 'snmp' in service_name or 'snmp' in product:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
                             all_snmp(host, protocol, port, output_dir)
-
+                        if protocol == 'tcp' and 'mysql' in service_name or 'mysql' in product:
+                            self.handle_service_enumeration(host, protocol, port, service_name, product)
+                            all_mysql(host, protocol, port, output_dir, product, users, passwords)
+                            
                 else:
                     print(f"Skipping {file_path}: Missing necessary columns.")
                 break  # Exit retry loop if successful
@@ -314,7 +318,7 @@ if __name__ == "__main__":
 
     # Check for linux tools, dependancies, etc.
     dependancy_check()
-    
+
     # Create Scanner and ServiceEnum objects
     scanner = Scanner(target=target, hosts_file=hosts, output_dir=output_dir)
     service_enum = ServiceEnum(output_dir)
@@ -324,9 +328,8 @@ if __name__ == "__main__":
         futures = [
             executor.submit(scanner.run),  # Start scanning
             executor.submit(service_enum.start_watching)  # Start file watching
-        ]
+                    ]
 
         # Wait for both tasks to complete
         for future in futures:
             future.result()
-            sys.exit(0) # test - possibly remove later

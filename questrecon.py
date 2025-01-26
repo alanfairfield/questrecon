@@ -8,17 +8,19 @@ import nmap
 import subprocess
 from colorama import Fore, Back, Style
 from pathlib import Path
-from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 # SMB module test
+from modules.environment import dependancy_check
 from modules.ftp import all_ftp
 from modules.http import all_http
 from modules.ssh import all_ssh
 from modules.telnet import all_telnet
 from modules.smb import all_smb
 from modules.snmp import all_snmp
+from modules.mysql import all_mysql
 
 
 # Define a class for Scanner object 
@@ -43,7 +45,9 @@ class Scanner:
 ''' + Style.RESET_ALL)
 
         print(ascii_art)
-        print(Fore.WHITE + Back.BLACK + Style.BRIGHT + "The quieter you become, the more you can hear.\n" + Style.RESET_ALL + Style.BRIGHT)
+        print(Fore.WHITE + Back.BLACK + Style.BRIGHT + "The quieter you become, the more you can hear.\n" + Style.RESET_ALL)
+        # Check environment for tools, ensure they are installed
+        #dependancy_check()
 
     def create_output_dir(self):
         if not os.path.isdir(self.output_dir):
@@ -58,7 +62,7 @@ class Scanner:
         try:
             target_dir = Path(self.output_dir) / "results" / target
             target_dir.mkdir(parents=True, exist_ok=True)
-            print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+] Running quick UDP scan on" + Style.RESET_ALL + Style.BRIGHT + Fore.YELLOW + Back.BLACK + f" {target} " + Style.RESET_ALL + Fore.GREEN + Back.BLACK + Style.BRIGHT +"to determine which ports are open..." + Style.RESET_ALL)
+            print(Fore.GREEN + Back.BLACK + Style.BRIGHT + f"[+] Running Quick UDP scan on" + Style.RESET_ALL + Style.BRIGHT + Fore.YELLOW + Back.BLACK + f" {target} " + Style.RESET_ALL + Fore.GREEN + Back.BLACK + Style.BRIGHT +"to determine which ports are open..." + Style.RESET_ALL)
             nm.scan(target, arguments=f"-sU -F -oN {target_dir}/quick_nmap_udp")
             udp_ports = nm[target]['udp'].keys() if 'udp' in nm[target] else []
             print(Fore.LIGHTMAGENTA_EX + Style.BRIGHT + Back.BLACK + f"[+] UDP Ports open on {target}: " + Style.RESET_ALL + Fore.LIGHTGREEN_EX + Style.BRIGHT + Back.BLACK +  f"{list(udp_ports)}" + Style.RESET_ALL)
@@ -156,7 +160,7 @@ class Scanner:
                 future_to_host[executor.submit(self.udp_nmap, host)] = (host, 'udp') # Quick UDP
 
             for future in as_completed(future_to_host): 
-                host, scan_type = future_to_host[future]
+                host, port = future_to_host[future]
                 try:
                     ports = future.result()
                     for port in ports:
@@ -245,24 +249,24 @@ class ServiceEnum:
                         if protocol == 'udp' and 'snmp' in service_name or 'snmp' in product:
                             self.handle_service_enumeration(host, protocol, port, service_name, product)
                             all_snmp(host, protocol, port, output_dir)
-
+                        if protocol == 'tcp' and 'mysql' in service_name or 'mysql' in product:
+                            self.handle_service_enumeration(host, protocol, port, service_name, product)
+                            all_mysql(host, protocol, port, output_dir, product, users, passwords)
                             
-            
-
                 else:
                     print(f"Skipping {file_path}: Missing necessary columns.")
                 break  # Exit retry loop if successful
             except Exception as e:
                 #print(f"Error processing file {file_path}: {e}")
                 retries -= 1
-                time.sleep(5)  # Wait before retrying
+                time.sleep(2)  # Wait before retrying
 
         if retries == 0:
             #print(f"Failed to process {file_path} after multiple attempts.")
             pass
 
     def on_created(self, event):
-        """Handle newly created files."""
+        #Handle newly created files.
         if event.is_directory:
             return
 
@@ -308,11 +312,12 @@ if __name__ == "__main__":
 
     passwords_path = subprocess.getoutput(["locate darkweb2017-top100.txt | head -n 1"])
     passwords = args.password or passwords_path
- 
-
 
     if not target and not hosts:
         print(f"[+] Provide a target using -t <target> or a target-containing file using -H <hosts.txt>")
+
+    # Check for linux tools, dependancies, etc.
+    dependancy_check()
 
     # Create Scanner and ServiceEnum objects
     scanner = Scanner(target=target, hosts_file=hosts, output_dir=output_dir)
@@ -328,4 +333,3 @@ if __name__ == "__main__":
         # Wait for both tasks to complete
         for future in futures:
             future.result()
-            sys.exit(0) # test - possibly remove later

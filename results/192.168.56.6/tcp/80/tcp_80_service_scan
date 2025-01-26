@@ -1,0 +1,57 @@
+# Nmap 7.94SVN scan initiated Fri Jan 24 23:28:39 2025 as: /usr/lib/nmap/nmap -oX - -p80 -sV "--script=vuln and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)" -oN /home/quest/Github_Repo/questrecon/results/192.168.56.6/tcp/80/tcp_80_service_scan 192.168.56.6
+Nmap scan report for 192.168.56.6
+Host is up (0.00052s latency).
+
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Apache httpd 2.4.25
+|_http-server-header: Apache/2.4.25 (Debian)
+| http-enum: 
+|_  /: Root directory w/ listing on 'apache/2.4.25 (debian)'
+| http-csrf: 
+| Spidering limited to: maxdepth=3; maxpagecount=20; withinhost=192.168.56.6
+|   Found the following possible CSRF vulnerabilities: 
+|     
+|     Path: http://192.168.56.6:80/ossec/index.php?f=s
+|     Form id: i_date_a
+|     Form action: index.php?f=s
+|     
+|     Path: http://192.168.56.6:80/ossec/index.php?f=t
+|     Form id: 
+|     Form action: index.php?f=t
+|     
+|     Path: http://192.168.56.6:80/ossec/index.php?f=i
+|     Form id: 
+|_    Form action: index.php?f=i
+|_http-dombased-xss: Couldn't find any DOM based XSS.
+| http-sql-injection: 
+|   Possible sqli for queries:
+|     http://192.168.56.6:80/?C=N%3BO%3DD%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=S%3BO%3DD%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=M%3BO%3DD%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=D%3BO%3DD%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=N%3BO%3DD%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://192.168.56.6:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|_    http://192.168.56.6:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
+MAC Address: 08:00:27:62:5D:62 (Oracle VirtualBox virtual NIC)
+Service Info: Host: 127.0.1.1
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Fri Jan 24 23:28:47 2025 -- 1 IP address (1 host up) scanned in 8.64 seconds

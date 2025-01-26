@@ -1,0 +1,83 @@
+404      GET        9l       33w        -c Auto-filtering found 404-like response and created new filter; toggle off with --dont-filter
+403      GET       10l       31w        -c Auto-filtering found 404-like response and created new filter; toggle off with --dont-filter
+200      GET       29l      123w      891c http://192.168.56.5/
+200      GET       29l      123w      891c http://192.168.56.5/index
+200      GET       29l      123w      891c http://192.168.56.5/index.php
+301      GET        9l       29w      322c http://192.168.56.5/phpMyAdmin => http://192.168.56.5/phpMyAdmin/
+301      GET        9l       29w      317c http://192.168.56.5/twiki => http://192.168.56.5/twiki/
+200      GET       28l      163w    10570c http://192.168.56.5/phpMyAdmin/themes/original/img/logo_right.png
+200      GET       83l      282w     4145c http://192.168.56.5/phpMyAdmin/index.php
+200      GET       69l      110w     1063c http://192.168.56.5/phpMyAdmin/print.css
+200      GET     1150l     2065w    21389c http://192.168.56.5/phpMyAdmin/phpmyadmin.css.php
+200      GET        0l        0w        0c http://192.168.56.5/phpMyAdmin/themes/original/layout.inc.php
+200      GET      949l     4899w    52417c http://192.168.56.5/twiki/TWikiHistory.html
+301      GET        9l       29w      322c http://192.168.56.5/mutillidae => http://192.168.56.5/mutillidae/
+200      GET      114l      620w     4334c http://192.168.56.5/twiki/readme.txt
+200      GET      377l     3151w    19440c http://192.168.56.5/twiki/license.txt
+200      GET       30l      118w    44480c http://192.168.56.5/phpMyAdmin/favicon.ico
+200      GET       83l      282w     4145c http://192.168.56.5/phpMyAdmin/index
+301      GET        9l       29w      316c http://192.168.56.5/test => http://192.168.56.5/test/
+200      GET        0l        0w        0c http://192.168.56.5/test/testoutput/ESAPI_logging_file_test
+200      GET      141l      565w    33936c http://192.168.56.5/phpMyAdmin/themes/darkblue_orange/screen.png
+200      GET     7565l    50133w   453477c http://192.168.56.5/twiki/TWikiDocumentation.html
+200      GET        0l        0w        0c http://192.168.56.5/phpMyAdmin/themes/original/info.inc.php
+200      GET        0l        0w        0c http://192.168.56.5/phpMyAdmin/themes/darkblue_orange/info.inc.php
+200      GET        0l        0w        0c http://192.168.56.5/phpMyAdmin/themes/darkblue_orange/layout.inc.php
+200      GET       33l      108w     1066c http://192.168.56.5/mutillidae/javascript/bookmark-site.js
+200      GET        3l        6w      237c http://192.168.56.5/mutillidae/javascript/html5-secrets.js
+200      GET       41l      127w     1437c http://192.168.56.5/mutillidae/framer.html
+200      GET       39l      186w     1147c http://192.168.56.5/mutillidae/javascript/follow-mouse.js
+200      GET      171l      868w    10039c http://192.168.56.5/twiki/bin/view/Main/WebHome
+200      GET       13l       77w     7730c http://192.168.56.5/mutillidae/images/php-mysql-logo-176-200.jpeg
+200      GET      111l      339w     2250c http://192.168.56.5/mutillidae/styles/ddsmoothmenu/ddsmoothmenu.css
+200      GET       17l       64w      782c http://192.168.56.5/twiki/index
+200      GET      153l      704w     8638c http://192.168.56.5/mutillidae/javascript/ddsmoothmenu/ddsmoothmenu.js
+200      GET        1l        1w       58c http://192.168.56.5/mutillidae/javascript/ddsmoothmenu/readme.txt
+301      GET        9l       29w      329c http://192.168.56.5/mutillidae/images => http://192.168.56.5/mutillidae/images/
+200      GET       53l      180w     1188c http://192.168.56.5/mutillidae/styles/ddsmoothmenu/ddsmoothmenu-v.css
+200      GET        1l        1w       58c http://192.168.56.5/mutillidae/styles/ddsmoothmenu/readme.txt
+200      GET       31l      168w     9832c http://192.168.56.5/mutillidae/images/coykillericon.png
+200      GET      406l      687w     7734c http://192.168.56.5/mutillidae/styles/global-styles.css
+200      GET       33l      146w    11448c http://192.168.56.5/mutillidae/images/samurai-wtf-logo-320-214.jpeg
+200      GET      169l      714w    42993c http://192.168.56.5/phpMyAdmin/themes/original/screen.png
+200      GET       19l      810w    57254c http://192.168.56.5/mutillidae/javascript/ddsmoothmenu/jquery.min.js
+200      GET      180l     1081w    70654c http://192.168.56.5/mutillidae/images/youtube_256_256.png
+200      GET        1l        9w      926c http://192.168.56.5/mutillidae/images/right.gif
+200      GET       27l      193w    12478c http://192.168.56.5/mutillidae/images/add_icon.png
+200      GET       13l       36w     2385c http://192.168.56.5/mutillidae/images/backtrack-4-r2-logo-90-69.png
+200      GET      767l     2549w   181448c http://192.168.56.5/mutillidae/images/IhackBanner2x_final_print.jpg
+200      GET       24l      134w    11655c http://192.168.56.5/mutillidae/images/information-icon-64-64.png
+200      GET       35l      183w    18947c http://192.168.56.5/mutillidae/images/toad-for-mysql-77-80.jpg
+200      GET       13l       60w     3578c http://192.168.56.5/mutillidae/images/twitter.gif
+200      GET      187l      697w    89709c http://192.168.56.5/mutillidae/images/bui_eclipse_pos_logo_fc_med.jpg
+200      GET       20l      116w    12698c http://192.168.56.5/mutillidae/images/firefox-logo-500-500.jpeg
+302      GET        0l        0w        0c http://192.168.56.5/dvwa/index => login.php
+301      GET        9l       29w      316c http://192.168.56.5/dvwa => http://192.168.56.5/dvwa/
+302      GET        0l        0w        0c Auto-filtering found 404-like response and created new filter; toggle off with --dont-filter
+200      GET       96l      379w        -c Auto-filtering found 404-like response and created new filter; toggle off with --dont-filter
+200      GET       51l      278w    22732c http://192.168.56.5/mutillidae/images/back-button-128px-by-128px.png
+200      GET       12l       85w     5365c http://192.168.56.5/mutillidae/images/refresh-button-48px-by-48px.png
+200      GET      266l     1523w   130645c http://192.168.56.5/mutillidae/images/owasp-logo-400-300.png
+200      GET        5l       10w     1366c http://192.168.56.5/mutillidae/favicon.ico
+200      GET      564l     1570w    24205c http://192.168.56.5/mutillidae/index.php
+200      GET       28l      239w     2789c http://192.168.56.5/mutillidae/set-up-database.php
+200      GET      564l     1570w    24205c http://192.168.56.5/mutillidae/index
+200      GET       59l      295w    27220c http://192.168.56.5/mutillidae/images/irongeek-logo.png
+200      GET        2l        6w      924c http://192.168.56.5/mutillidae/images/down.gif
+200      GET        9l       37w     2845c http://192.168.56.5/mutillidae/images/magnifying-glass-icon.jpeg
+200      GET       24l      150w     9663c http://192.168.56.5/mutillidae/images/coykillericonfaceup.png
+200      GET       30l      161w    14796c http://192.168.56.5/mutillidae/images/toad-logo-216-222.jpeg
+200      GET      157l      748w    67119c http://192.168.56.5/mutillidae/images/rene-magritte-frame.jpg
+200      GET       27l      136w     9813c http://192.168.56.5/mutillidae/images/delete-icon-256-256.png
+200      GET       13l      116w     9690c http://192.168.56.5/mutillidae/images/owasp-logo-240-240.jpeg
+200      GET      149l      715w     6718c http://192.168.56.5/twiki/bin/view/twiki/bin/view/TWiki/GoodStyle
+200      GET       90l      409w     5209c http://192.168.56.5/twiki/bin/view/twiki/bin/view/Main/TWikiGroups
+200      GET      171l      868w    10039c http://192.168.56.5/twiki/bin/view/twiki/bin/edit/Main/WebHome
+200      GET      663l     2749w    25686c http://192.168.56.5/twiki/bin/view/twiki/bin/view/TWiki/TWikiPreferences
+200      GET      205l      884w     9141c http://192.168.56.5/twiki/bin/view/twiki/bin/view/TWiki/WebPreferences
+200      GET      171l      868w    10039c http://192.168.56.5/twiki/bin/view/twiki/bin/attach/Main/WebHome
+200      GET      102l      390w     4738c http://192.168.56.5/twiki/bin/view/twiki/bin/search/Main/SearchResult
+200      GET       77l      364w     4747c http://192.168.56.5/twiki/bin/view/twiki/bin/view/Main/WebStatistics
+200      GET      166l      599w     9328c http://192.168.56.5/twiki/bin/view/twiki/bin/view/Sandbox/WebSearch
+200      GET       75l      367w     4556c http://192.168.56.5/twiki/bin/view/twiki/bin/view/Main/WebNotify
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         

