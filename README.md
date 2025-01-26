@@ -40,9 +40,13 @@ Ensure the following are installed:
   pip install -r requirements.txt
   
   **Required modules include:**
+
       _colorama_
+
       _pandas_
+
       _nmap_
+      
       _watchdog_
 
 # Usage
