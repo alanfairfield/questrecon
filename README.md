@@ -70,6 +70,7 @@ _Usernames_: /usr/share/seclists/Usernames/top-usernames-shortlist.txt
 
 _Passwords_: /usr/share/seclists/Passwords/Common-Credentials/10k-most-common.txt
 
+
 # Disclaimer
 QuestRecon is intended for authorized security testing and research purposes only. Unauthorized use may violate laws and agreements, and contributors to QuestRecon accept no responsibility for damage caused by misuse.
 
