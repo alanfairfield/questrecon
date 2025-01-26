@@ -38,6 +38,7 @@ Ensure the following are installed:
 - **Python**: >= 3.6
 - **Modules**: Install using:
   pip install -r requirements.txt
+  
   **Required modules include:**
       _colorama_
 
